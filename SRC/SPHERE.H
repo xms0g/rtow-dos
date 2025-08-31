@@ -1,8 +1,8 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "SCENEOBJ.H"
-#include "MATH.H"
+#include "sceneobj.h"
+#include "math.h"
 
 class Sphere: public SceneObject {
 public:

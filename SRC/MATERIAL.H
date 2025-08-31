@@ -1,9 +1,9 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "SCENEOBJ.H"
-#include "COLOR.H"
-#include "MATH.H"
+#include "sceneobj.h"
+#include "color.h"
+#include "math.h"
 
 class Material {
 public:

@@ -1,8 +1,8 @@
 #ifndef SCENEOBJ_H
 #define SCENEOBJ_H
 
-#include "RAY.H"
-#include "BOOL.H"
+#include "ray.h"
+#include "bool.h"
 
 class Material;
 struct HitRecord {

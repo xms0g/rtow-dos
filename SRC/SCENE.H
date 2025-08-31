@@ -1,8 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "SCENEOBJ.H"
-#include "VECTOR.H"
+#include "sceneobj.h"
+#include "vector.h"
 
 class Scene: public SceneObject {
 public:

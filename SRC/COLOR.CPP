@@ -1,6 +1,6 @@
-#include "COLOR.H"
+#include "color.h"
 #include <float.h>
-#include "MATH.H"
+#include "math.h"
 
 #define D(n) ((double)n)
 

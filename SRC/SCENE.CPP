@@ -1,4 +1,4 @@
-#include "SCENE.H"
+#include "scene.h"
 
 Scene::~Scene() {
     for (int i = 0; i < objects.size(); ++i) {

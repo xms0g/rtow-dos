@@ -1,7 +1,7 @@
 #ifndef VEC_H
 #define VEC_H
 
-#include "BOOL.H"
+#include "bool.h"
  
 struct vec3 {
     double x;

@@ -1,13 +1,13 @@
 #include <conio.h>
 #include <float.h>
-#include "COLOR.H"
+#include "color.h"
 #include "VGA.H"
-#include "RAY.H"
-#include "VEC3.H"
-#include "SCENE.H"
-#include "SPHERE.H"
-#include "CAMERA.H"
-#include "MATERIAL.H"
+#include "ray.h"
+#include "vec3.h"
+#include "scene.h"
+#include "sphere.h"
+#include "camera.h"
+#include "material.h"
 
 #define WIDTH 320
 #define HEIGHT 200

@@ -1,7 +1,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "VEC3.H"
+#include "vec3.h"
 
 class Ray {
 public:

@@ -1,5 +1,5 @@
-#include "CAMERA.H"
-#include "MATH.H"
+#include "camera.h"
+#include "math.h"
 
 Camera::Camera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, vec3 lookfrom, vec3 lookat, vec3 vup) {
     int imageHeight = (int)(imageWidth / aspectRatio);

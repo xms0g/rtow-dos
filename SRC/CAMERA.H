@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "VEC3.H"
-#include "RAY.H"
+#include "vec3.h"
+#include "ray.h"
 
 class Camera {
 public:

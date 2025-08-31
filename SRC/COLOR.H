@@ -1,7 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include "VEC3.H"
+#include "vec3.h"
 
 typedef vec3 color;
 

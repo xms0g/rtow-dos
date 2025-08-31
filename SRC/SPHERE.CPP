@@ -1,5 +1,5 @@
-#include "SPHERE.H"
-#include "MATERIAL.H"
+#include "sphere.h"
+#include "material.h"
 
 Sphere::~Sphere() {
     delete mMat;

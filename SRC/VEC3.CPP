@@ -1,6 +1,6 @@
-#include "VEC3.H"
-#include "MATH.H"
-#include "BOOL.H"
+#include "vec3.h"
+#include "math.h"
+#include "bool.h"
 
 void normalize(vec3& v) {
     v *= invLen(v);
