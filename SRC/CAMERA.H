@@ -1,13 +1,14 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <stddef.h>
 #include "vec3.h"
 #include "ray.h"
 
 class Camera {
 public:
     Camera(double aspectRatio = 1.0, double vfov = 90, double defocusAngle = 0, double focusDist = 10,
-        int imageWidth = 100, vec3 lookfrom = vec3(0,0,0), vec3 lookat = vec3(0,0,-1), vec3 vup = vec3(0,1,0));
+        int imageWidth = 100, const vec3* lookfrom = NULL, const vec3* lookat = NULL, const vec3* vup = NULL);
     
     Ray getRay(int x, int y) const;
 

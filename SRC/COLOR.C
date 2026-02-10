@@ -336,8 +336,8 @@ unsigned char rgb2vga(int r, int g, int b) {
 
   	double closest = DBL_MAX;
   	int index = 0;
- 
-  	for (int i = 0; i < 248; i++) {
+    int i;
+  	for (i = 0; i < 248; i++) {
 		const double* sample = ndx_vgapal[i];
 		double rs = sample[0];
 		double gs = sample[1];
@@ -356,10 +356,11 @@ unsigned char rgb2vga(int r, int g, int b) {
   	return (unsigned char)index;
 }
 
-unsigned char pixel2vga(const color& pixel) {
-    double r = pixel.x;
-    double g = pixel.y;
-    double b = pixel.z;
+unsigned char pixel2vga(const color* pixel) {
+    double r = pixel->x;
+    double g = pixel->y;
+    double b = pixel->z;
+    int rbyte, gbyte, bbyte;
 
 	// Apply a linear to gamma transform for gamma 2
 	r = linear2gamma(r);
@@ -367,9 +368,9 @@ unsigned char pixel2vga(const color& pixel) {
 	b = linear2gamma(b);
 
     // Translate the [0,1] component values to the byte range [0,255].
-    int rbyte = (int)(256 * clamp(r, 0.000, 0.999));
-    int gbyte = (int)(256 * clamp(g, 0.000, 0.999));
-    int bbyte = (int)(256 * clamp(b, 0.000, 0.999));
+    rbyte = (int)(256 * clamp(r, 0.000, 0.999));
+    gbyte = (int)(256 * clamp(g, 0.000, 0.999));
+    bbyte = (int)(256 * clamp(b, 0.000, 0.999));
 
     return rgb2vga(rbyte, gbyte, bbyte);
 }

@@ -9,7 +9,7 @@ class Material {
 public:
     virtual ~Material() {}
 
-    virtual bool scatter(const Ray& in, const HitRecord& rec, color& attenuation, Ray& scattered) const {
+    virtual bool scatter(const Ray* in, const HitRecord* rec, color* attenuation, Ray* scattered) const {
         (void)in;
         (void)rec;
         (void)attenuation;
@@ -20,19 +20,19 @@ public:
 
 class Lambertian: public Material {
 public:
-    Lambertian(const color& albedo) : albedo(albedo) {}
+    Lambertian(const color* albedo) : albedo(*albedo) {}
 
-    virtual bool scatter(const Ray& in, const HitRecord& rec, color& attenuation, Ray& scattered) const {
+    virtual bool scatter(const Ray* in, const HitRecord* rec, color* attenuation, Ray* scattered) const {
         (void)in;
-        vec3 scatterDir = rec.normal + randomUnitVec();
-
+        vec3 randomUnitVec = v3RandomUnitVec();
+        vec3 scatterDir = v3Add(&rec->normal, &randomUnitVec);
         // Catch degenerate scatter direction
-        if (nearZero(scatterDir)) {
-            scatterDir = rec.normal;
+        if (nearZero(&scatterDir)) {
+            scatterDir = rec->normal;
         }
            
-        scattered = Ray(rec.p, scatterDir);
-        attenuation = albedo;
+        *scattered = Ray(&rec->p, &scatterDir);
+        *attenuation = albedo;
         return true;
     }
 
@@ -42,14 +42,17 @@ private:
 
 class Metal: public Material {
 public:
-    Metal(const color& albedo, double fuzz) : albedo(albedo), mFuzz(fuzz < 1 ? fuzz: 1) {}
+    Metal(const color* albedo, double fuzz) : albedo(*albedo), mFuzz(fuzz < 1 ? fuzz: 1) {}
 
-    virtual bool scatter(const Ray& in, const HitRecord& rec, color& attenuation, Ray& scattered) const {
-        vec3 reflected = reflect(in.direction(), rec.normal);
-        reflected = unit(reflected) + randomUnitVec() * mFuzz;
-        scattered = Ray(rec.p, reflected);
-        attenuation = albedo;
-        return (bool)(dot(scattered.direction(), rec.normal) > 0);
+    virtual bool scatter(const Ray* in, const HitRecord* rec, color* attenuation, Ray* scattered) const {
+        vec3 reflected = reflect(in->direction(), &rec->normal);
+        vec3 randomUnitVec = v3RandomUnitVec();
+        vec3 reflectedUnit = unit(&reflected);
+        vec3 fuzzVec = v3MultiplyN(&randomUnitVec, mFuzz);
+        reflected = v3Add(&reflectedUnit, &fuzzVec);
+        *scattered = Ray(&rec->p, &reflected);
+        *attenuation = albedo;
+        return (bool)(dot(scattered->direction(), &rec->normal) > 0);
     }
 
 private:
@@ -61,25 +64,27 @@ class Dielectric: public Material {
 public:
     Dielectric(double refractionIndex) : mRefractionIndex(refractionIndex) {}
 
-    virtual bool scatter(const Ray& in, const HitRecord& rec, color& attenuation, Ray& scattered) const {
+    virtual bool scatter(const Ray* in, const HitRecord* rec, color* attenuation, Ray* scattered) const {
         // the glass surface absorbs nothing.
-        attenuation = color(1.0, 1.0, 1.0);
+        attenuation->x = 1.0;
+        attenuation->y = 1.0;
+        attenuation->z = 1.0;
         
-        double ri = rec.frontFace ? (1.0 / mRefractionIndex) : mRefractionIndex;
-
-        vec3 unitDir = unit(in.direction());
-        double cosTheta = fmin(dot(-unitDir, rec.normal), 1.0);
+        double ri = rec->frontFace ? (1.0 / mRefractionIndex) : mRefractionIndex;
+        vec3 unitDir = unit(in->direction());
+        vec3 v3Negated = v3Negate(&unitDir);
+        double cosTheta = fmin(dot(&v3Negated, &rec->normal), 1.0);
         double invSinTheta = invSqrt(1.0 - cosTheta * cosTheta);
         bool cannotRefract = (bool)(ri / invSinTheta > 1.0);
 
         vec3 dir;
         if (cannotRefract || reflectance(cosTheta, ri) > randd()) {
-            dir = reflect(unitDir, rec.normal);
+            dir = reflect(&unitDir, &rec->normal);
         } else {
-            dir = refract(unitDir, rec.normal, ri);
+            dir = refract(&unitDir, &rec->normal, ri);
         }
 
-        scattered = Ray(rec.p, dir);
+        *scattered = Ray(&rec->p, &dir);
         return true;
     }
 

@@ -5,11 +5,11 @@ Sphere::~Sphere() {
     delete mMat;
 }
 
-bool Sphere::hit(const Ray& ray, double tmin, double tmax, HitRecord& rec) const {
-    vec3 oc = mCenter - ray.origin();
-    double a = dot(ray.direction(), ray.direction());
-    double h = dot(ray.direction(), oc);
-    double c = dot(oc, oc) - mRadius * mRadius;
+bool Sphere::hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const {
+    vec3 oc = v3Subtract(&mCenter, ray->origin());
+    double a = dot(ray->direction(), ray->direction());
+    double h = dot(ray->direction(), &oc);
+    double c = dot(&oc, &oc) - mRadius * mRadius;
     double discriminant = h * h - a * c;
     
     if (discriminant < 0)
@@ -25,12 +25,13 @@ bool Sphere::hit(const Ray& ray, double tmin, double tmax, HitRecord& rec) const
             return false;
     }
 
-    rec.t = root;
-    rec.p = ray.at(rec.t);
+    rec->t = root;
+    rec->p = ray->at(rec->t);
     
-    vec3 outwardNormal = (rec.p - mCenter) / mRadius;
-    rec.setFaceNormal(ray, outwardNormal);
-    rec.mat = mMat;
+    vec3 outwardNormal = v3Subtract(&rec->p, &mCenter);
+    outwardNormal = v3DivideN(&outwardNormal, mRadius);
+    rec->setFaceNormal(ray, &outwardNormal);
+    rec->mat = mMat;
 
     return true;
 }

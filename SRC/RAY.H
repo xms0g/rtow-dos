@@ -7,14 +7,15 @@ class Ray {
 public:
     Ray() {}
 
-    Ray(const vec3& origin, const vec3& direction) : mOrigin(origin), mDirection(direction) {}
+    Ray(const vec3* origin, const vec3* direction) : mOrigin(*origin), mDirection(*direction) {}
 
-    const vec3& origin() const  { return mOrigin; }
+    const vec3* origin() const  { return &mOrigin; }
     
-    const vec3& direction() const { return mDirection; }
+    const vec3* direction() const { return &mDirection; }
 
     vec3 at(double t) const {
-        return mOrigin + (mDirection * t);
+        vec3 scaledDir = v3MultiplyN(&mDirection, t);
+        return v3Add(&mOrigin, &scaledDir);
     }
 
 private:
