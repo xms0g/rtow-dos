@@ -13,7 +13,7 @@ public:
     
     ~Sphere();
 
-    virtual bool hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const;
+    virtual bool hit(const struct Ray* ray, double tmin, double tmax, HitRecord* rec) const;
 
 private:
     vec3 mCenter;

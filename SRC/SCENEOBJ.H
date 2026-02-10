@@ -12,11 +12,11 @@ struct HitRecord {
     double t;
     bool frontFace;
 
-    void setFaceNormal(const Ray* ray, const vec3* outwardNormal) {
+    void setFaceNormal(const struct Ray* ray, const vec3* outwardNormal) {
         // Sets the hit record normal vector.
         // NOTE: the parameter `outward_normal` is assumed to have unit length.
 
-        frontFace = (bool)(dot(ray->direction(), outwardNormal) < 0);
+        frontFace = (bool)(dot(rayDirection(ray), outwardNormal) < 0);
         normal = frontFace ? *outwardNormal : v3Negate(outwardNormal);
     }
 };
@@ -25,7 +25,7 @@ class SceneObject {
 public:
     virtual ~SceneObject() {}
 
-    virtual bool hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const = 0;
+    virtual bool hit(const struct Ray* ray, double tmin, double tmax, HitRecord* rec) const = 0;
 };
 
 #endif

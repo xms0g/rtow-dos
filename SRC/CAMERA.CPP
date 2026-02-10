@@ -44,7 +44,7 @@ Camera::Camera(double aspectRatio, double vfov, double defocusAngle, double focu
     mDefocusDiskV = v3MultiplyN(&v, defocusRadius);
 }
 
-Ray Camera::getRay(int x, int y) const {
+struct Ray Camera::getRay(int x, int y) const {
     // Construct a camera ray originating from the origin and directed at randomly sampled
     // point around the pixel location x, y.
 
@@ -56,7 +56,11 @@ Ray Camera::getRay(int x, int y) const {
 
     vec3 rayOrig = (mDefocusAngle <= 0) ? mCenter : defocusDiskSample();;
     vec3 rayDir = v3Subtract(&pixelSample, &rayOrig);
-    return Ray(&rayOrig, &rayDir);
+    
+    struct Ray result;
+    result.origin = rayOrig;
+    result.direction = rayDir;
+    return result;
 }
 
 vec3 Camera::sampleSquare() const {

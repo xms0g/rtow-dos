@@ -5,10 +5,10 @@ Sphere::~Sphere() {
     delete mMat;
 }
 
-bool Sphere::hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const {
-    vec3 oc = v3Subtract(&mCenter, ray->origin());
-    double a = dot(ray->direction(), ray->direction());
-    double h = dot(ray->direction(), &oc);
+bool Sphere::hit(const struct Ray* ray, double tmin, double tmax, HitRecord* rec) const {
+    vec3 oc = v3Subtract(&mCenter, rayOrigin(ray));
+    double a = dot(rayDirection(ray), rayDirection(ray));
+    double h = dot(rayDirection(ray), &oc);
     double c = dot(&oc, &oc) - mRadius * mRadius;
     double discriminant = h * h - a * c;
     
@@ -26,7 +26,7 @@ bool Sphere::hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const
     }
 
     rec->t = root;
-    rec->p = ray->at(rec->t);
+    rec->p = rayAt(ray, rec->t);
     
     vec3 outwardNormal = v3Subtract(&rec->p, &mCenter);
     outwardNormal = v3DivideN(&outwardNormal, mRadius);

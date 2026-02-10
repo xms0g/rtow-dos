@@ -10,7 +10,7 @@ public:
     Camera(double aspectRatio = 1.0, double vfov = 90, double defocusAngle = 0, double focusDist = 10,
         int imageWidth = 100, const vec3* lookfrom = NULL, const vec3* lookat = NULL, const vec3* vup = NULL);
     
-    Ray getRay(int x, int y) const;
+    struct Ray getRay(int x, int y) const;
 
 private:
     vec3 sampleSquare() const;

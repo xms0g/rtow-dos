@@ -1,7 +1,7 @@
 #include <conio.h>
 #include <float.h>
 #include "color.h"
-#include "VGA.H"
+#include "vga.h"
 #include "ray.h"
 #include "vec3.h"
 #include "scene.h"
@@ -9,22 +9,22 @@
 #include "camera.h"
 #include "material.h"
 
-#define WIDTH 320
-#define HEIGHT 200
-#define SAMPLES_PER_PIXEL 10
-#define PIXEL_SAMPLES_SCALE 1.0 / SAMPLES_PER_PIXEL
-#define MAX_DEPTH 10
-// Camera Settings
-#define ASPECT_RATIO    4.0 / 3.0
-#define VFOV            20
-#define DEFOCUS_ANGLE   0.6
-#define FOCUS_DIST      10.0
+static const int WIDTH = 320;
+static const int HEIGHT = 200;
+static const int SAMPLES_PER_PIXEL = 10;
+static const int MAX_DEPTH = 10;
+static const double PIXEL_SAMPLES_SCALE = 1.0 / SAMPLES_PER_PIXEL;
 
+// Camera Settings
+static const double ASPECT_RATIO = 4.0 / 3.0;
+static const double VFOV = 20.0;
+static const double DEFOCUS_ANGLE = 0.6;
+static const double FOCUS_DIST = 10.0;
 static const vec3 VUP = {0, 1, 0};
 static const vec3 LOOKFROM = {13, 2, 3};
 static const vec3 LOOKAT = {0, 0, 0};
 
-color rayColor(const Ray* ray, int depth, const Scene* scene) {
+color rayColor(const struct Ray* ray, int depth, const Scene* scene) {
     if (depth <= 0) {
         vec3 zeroColor = {0, 0, 0};
         return zeroColor;
@@ -32,7 +32,7 @@ color rayColor(const Ray* ray, int depth, const Scene* scene) {
 
     HitRecord rec;
     if (scene->hit(ray, 0.001, DBL_MAX, &rec)) {
-        Ray scattered;
+        struct Ray scattered;
         color attenuation;
         if (rec.mat->scatter(ray, &rec, &attenuation, &scattered)) {
             vec3 scatteredCol = rayColor(&scattered, depth - 1, scene);
@@ -43,7 +43,7 @@ color rayColor(const Ray* ray, int depth, const Scene* scene) {
         return zeroColor;
     }
 
-    vec3 unitDir = unit(ray->direction());
+    vec3 unitDir = unit(rayDirection(ray));
     double a = 0.5 * (unitDir.y + 1.0);
     vec3 col1 = {1.0, 1.0, 1.0};
     vec3 col2 = {0.5, 0.7, 1.0};
@@ -110,7 +110,7 @@ void main(void) {
             color pixelColor = {0, 0, 0};
             
             for (int i = 0; i < SAMPLES_PER_PIXEL; ++i) {
-                Ray r = cam.getRay(x, y);
+                struct Ray r = cam.getRay(x, y);
                 vec3 rayCol = rayColor(&r, MAX_DEPTH, &scene);
                 pixelColor = v3Add(&pixelColor, &rayCol);
             }
