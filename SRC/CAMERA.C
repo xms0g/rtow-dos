@@ -6,7 +6,7 @@ static vec3 camDefocusDiskSample(const Camera* cam);
 
 void camInit(Camera* cam, double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
     double theta, h, viewportHeight, viewportWidth, defocusRadius;
-    vec3 subLookFromAt, w, v3CrossVupW, u, v, viewport_u, viewport_v, addUV, halfAddUV, mulWFocusDist, viewportUpperLeft, pixel00Offset;
+    vec3 subLookFromAt, w, crossVupW, u, v, viewport_u, viewport_v, addUV, halfAddUV, mulWFocusDist, viewportUpperLeft, pixel00Offset;
     
     int imageHeight = (int)(imageWidth / aspectRatio);
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
@@ -21,8 +21,8 @@ void camInit(Camera* cam, double aspectRatio, double vfov, double defocusAngle, 
     // Calculate the u,v,w v3Unit basis vectors for the camera coordinate frame.
     subLookFromAt = v3Subtract(lookfrom, lookat);
     w = v3Unit(&subLookFromAt);
-    v3CrossVupW = v3Cross(vup, &w);
-    u = v3Unit(&v3CrossVupW);
+    crossVupW = v3Cross(vup, &w);
+    u = v3Unit(&crossVupW);
     v = v3Cross(&w, &u);
 
     // Calculate the vectors av3Cross the horizontal and down the vertical viewport edges.
