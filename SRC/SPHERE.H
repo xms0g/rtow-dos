@@ -1,24 +1,32 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "sceneobj.h"
-#include "math.h"
+#include "vec3.h"
+#include "bool.h"
 
-class Sphere: public SceneObject {
-public:
-    Sphere(const vec3* center, double radius, Material* mat): 
-        mCenter(*center), 
-        mRadius(fmax(0, radius)),
-        mMat(mat) {}
-    
-    ~Sphere();
+struct Material;
+struct HitRecord;
+struct Ray;
 
-    virtual bool hit(const struct Ray* ray, double tmin, double tmax, HitRecord* rec) const;
+typedef struct Sphere {
+    vec3 center;
+    double radius;
+    struct Material* mat;
+} Sphere;
 
-private:
-    vec3 mCenter;
-    double mRadius;
-    Material* mMat;
-};
+typedef struct {    
+    int count;      
+    int capacity;   
+    Sphere* data;     
+} SphereArray;
+
+bool spHit(const Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
+
+void saInit(SphereArray* sa, int size);
+void saPushback(SphereArray* sa, const Sphere* sphere);
+void saRemove(SphereArray* sa, int index);
+Sphere* saAt(SphereArray* sa, int index);
+void saClear(SphereArray* sa);
+void saFree(SphereArray* sa);
 
 #endif

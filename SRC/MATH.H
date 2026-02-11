@@ -18,14 +18,8 @@
 
 #define randd() (rand() / (RAND_MAX + 1.0))
 
-#define randdMinMax(min, max) (min + (max - min) * randd())
+#define randdRange(min, max) (min + (max - min) * randd())
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 double invSqrt(double n);
-#ifdef __cplusplus
-}
-#endif
 
 #endif

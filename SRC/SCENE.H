@@ -1,25 +1,18 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "sceneobj.h"
-#include "vector.h"
+#include "bool.h"
 
-class Scene: public SceneObject {
-public:
-    Scene() {}
+struct Ray;
+struct HitRecord;
+struct Sphere;
 
-    Scene(SceneObject* object) { add(object); }
-    
-    ~Scene();
-    
-    void clear() { objects.clear(); }
+void scInit(int size);
 
-    void add(SceneObject* object) { objects.push_back(object); }
+void scAdd(const struct Sphere* object);
 
-    virtual bool hit(const Ray* ray, double tmin, double tmax, HitRecord* rec) const;
+void scClear();
 
-private:
-    vector<SceneObject*> objects;
-};
+bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
 
 #endif

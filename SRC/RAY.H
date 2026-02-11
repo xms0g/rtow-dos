@@ -3,22 +3,11 @@
 
 #include "vec3.h"
 
-struct Ray {
+typedef struct Ray {
     vec3 origin;
     vec3 direction;
-};
+} Ray;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-const vec3* rayOrigin(const struct Ray* ray);
-
-const vec3* rayDirection(const struct Ray* ray);
-
-vec3 rayAt(const struct Ray* ray, double t);
-
-#ifdef __cplusplus
-}
-#endif
+vec3 rayAt(const Ray* ray, double t);
 
 #endif

@@ -7,14 +7,8 @@
 // VGA Text Mode
 #define MODE_VGA_3H  0x3
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 void _Cdecl _waitvretrace(void);
 void _Cdecl _putpixel(int x, int y, char color);
 void _Cdecl _initMode(int mode);
-#ifdef __cplusplus
-}
-#endif
 
 #endif

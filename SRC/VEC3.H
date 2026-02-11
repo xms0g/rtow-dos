@@ -9,13 +9,11 @@ typedef struct vec3 {
     double z;
 } vec3;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 vec3 v3Negate(const vec3* v);
 
 vec3 v3Add(const vec3* v0, const vec3* v1);
+
+void v3AddN(vec3* v, double N);
 
 vec3 v3Subtract(const vec3* v0, const vec3* v1);
 
@@ -27,35 +25,32 @@ vec3 v3Divide(const vec3* v0, const vec3* v1);
 
 vec3 v3DivideN(const vec3* v, double n);
 
-void normalize(vec3* v);
+void v3Normalize(vec3* v);
 
-double invLen(const vec3* v);
+double v3InvLen(const vec3* v);
 
-double lenSquared(const vec3* v);
+double v3LenSquared(const vec3* v);
 
-double dot(const vec3* v0, const vec3* v1);
+double v3Dot(const vec3* v0, const vec3* v1);
 
-int nearZero(const vec3* v);
+bool nearZero(const vec3* v);
 
-vec3 cross(const vec3* v0, const vec3* v1);
+vec3 v3Cross(const vec3* v0, const vec3* v1);
 
-vec3 unit(const vec3* v);
+vec3 v3Unit(const vec3* v);
 
 vec3 v3Random();
 
-vec3 v3RandomMinMax(double min, double max);
+vec3 v3RandomRange(double min, double max);
 
 vec3 v3RandomUnitVec();
 
-vec3 randomInUnitDisk();
+vec3 v3RandomInUnitDisk();
 
-vec3 randomOnHemisphere(const vec3* normal);
+vec3 v3RandomOnHemisphere(const vec3* normal);
 
-vec3 reflect(const vec3* v, const vec3* n);
+vec3 v3Reflect(const vec3* v, const vec3* n);
 
-vec3 refract(vec3* uv, const vec3* n, double etaiOverEtat);
+vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat);
 
-#ifdef __cplusplus
-}
-#endif
 #endif
