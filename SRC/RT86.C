@@ -34,7 +34,7 @@ static vec3 zeroColor = {0, 0, 0};
 color rayColor(const Ray* ray, int depth) {
     double a;
     HitRecord rec;
-    vec3 v3UnitDir, col1Scaled, col2Scaled;
+    vec3 unitDir, col1Scaled, col2Scaled;
 
     if (depth <= 0) {
         return zeroColor;
@@ -67,8 +67,8 @@ color rayColor(const Ray* ray, int depth) {
         return zeroColor;
     }
 
-    v3UnitDir = v3Unit(&ray->direction);
-    a = 0.5 * (v3UnitDir.y + 1.0);
+    unitDir = v3Unit(&ray->direction);
+    a = 0.5 * (unitDir.y + 1.0);
     col1Scaled = v3MultiplyN(&col1, 1.0 - a);
     col2Scaled = v3MultiplyN(&col2, a);
 

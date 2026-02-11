@@ -156,25 +156,25 @@ vec3 v3RandomInUnitDisk() {
 }
 
 vec3 v3RandomOnHemisphere(const vec3* normal) {
-    vec3 onv3UnitSphere = v3RandomUnitVec();
+    vec3 onUnitSphere = v3RandomUnitVec();
     
-    if (v3Dot(&onv3UnitSphere, normal) > 0.0) // In the same hemisphere as the normal
-        return onv3UnitSphere;
+    if (v3Dot(&onUnitSphere, normal) > 0.0) // In the same hemisphere as the normal
+        return onUnitSphere;
     
-    return v3Negate(&onv3UnitSphere);
+    return v3Negate(&onUnitSphere);
 }
 
 vec3 v3Reflect(const vec3* v, const vec3* n) {
-    vec3 nMultv3Dot = v3MultiplyN(n, 2 * v3Dot(v, n));
-    return v3Subtract(v, &nMultv3Dot);
+    vec3 nMultDot = v3MultiplyN(n, 2 * v3Dot(v, n));
+    return v3Subtract(v, &nMultDot);
 }
 
 vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat) {
     vec3 rayOutParallel;
-    vec3 v3Negated = v3Negate(uv);
-    double cos_theta = fmin(v3Dot(&v3Negated, n), 1.0);
+    vec3 negated = v3Negate(uv);
+    double cos_theta = fmin(v3Dot(&negated, n), 1.0);
     vec3 nMultCosTheta = v3MultiplyN(n, cos_theta);
-    vec3 rayOutPerp = v3Add(&v3Negated, &nMultCosTheta);
+    vec3 rayOutPerp = v3Add(&negated, &nMultCosTheta);
     rayOutPerp = v3MultiplyN(&rayOutPerp, etaiOverEtat);
         
     rayOutParallel = v3DivideN(n, -invSqrt(fabs(1.0 - v3LenSquared(&rayOutPerp))));

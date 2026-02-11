@@ -38,6 +38,4 @@ bool metalScatter(const Metal* mat, const struct Ray* in, const struct HitRecord
 
 bool dielectricScatter(const Dielectric* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 
-double v3Reflectance(double cosine, double refractionIndex);
-
 #endif
