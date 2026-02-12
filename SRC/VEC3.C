@@ -77,11 +77,11 @@ vec3 v3DivideN(const vec3* v, double N) {
 }
 
 void v3Normalize(vec3* v) {
-    *v = v3MultiplyN(v, v3InvLen(v));
+    *v = v3DivideN(v, v3Len(v));
 }
 
-double v3InvLen(const vec3* v) {
-    return invSqrt(v3LenSquared(v));
+double v3Len(const vec3* v) {
+    return 1.0 / invSqrt(v3LenSquared(v));
 }
 
 double v3LenSquared(const vec3* v) {
@@ -109,7 +109,7 @@ vec3 v3Cross(const vec3* v0, const vec3* v1) {
 }
 
 vec3 v3Unit(const vec3* v) {
-    return v3MultiplyN(v, v3InvLen(v));
+    return v3DivideN(v, v3Len(v));
 }
 
 vec3 v3Random() {

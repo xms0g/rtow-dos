@@ -27,7 +27,7 @@ vec3 v3DivideN(const vec3* v, double n);
 
 void v3Normalize(vec3* v);
 
-double v3InvLen(const vec3* v);
+double v3Len(const vec3* v);
 
 double v3LenSquared(const vec3* v);
 

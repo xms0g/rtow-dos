@@ -87,7 +87,7 @@ void main(void) {
             center.z = b + 0.9 * randd();
         
             temp1 = v3Subtract(&center, &temp);
-            if (pow(v3Len(&temp1), -1) > 0.9) {
+            if (v3Len(&temp1) > 0.9) {
                 if (choose_mat < 0.8) {
                     // diffuse
                     vec3 albedoVec = v3Random();
