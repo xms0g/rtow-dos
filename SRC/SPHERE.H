@@ -20,6 +20,8 @@ typedef struct {
     Sphere* data;     
 } SphereArray;
 
+Sphere* spInit(vec3 center, double radius, struct Material* mat);
+
 bool spHit(const Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
 
 void saInit(SphereArray* sa, int size);

@@ -26,10 +26,10 @@ typedef struct Dielectric {
     double refractionIndex;
 } Dielectric;
 
-bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+Lambertian* matLambertianInit(color albedo);
 
-bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+Metal* matMetalInit(color albedo, double fuzz);
 
-bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+Dielectric* matDielectricInit(double refractionIndex);
 
 #endif

@@ -4,6 +4,15 @@
 #include "hitrcd.h"
 #include "ray.h"
 
+Sphere* spInit(vec3 center, double radius, struct Material* mat) {
+    Sphere* sphere = malloc(sizeof(Sphere));
+    sphere->center = center;
+    sphere->radius = radius;
+    sphere->mat = mat;
+    
+    return sphere;
+}
+
 bool spHit(const Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
     double sqrtd, root;
     vec3 outwardNormal;

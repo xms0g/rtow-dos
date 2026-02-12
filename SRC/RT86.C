@@ -67,25 +67,11 @@ void main(void) {
     vec3 metalCenter = {4, 1, 0};
     color metalColor = {0.7, 0.6, 0.5};
     
-    Sphere* groundSphere = malloc(sizeof(Sphere));
-    Lambertian* groundMat = malloc(sizeof(Lambertian));
-    Sphere* metalSphere = malloc(sizeof(Sphere));
-    Metal* metalMat = malloc(sizeof(Metal));
-    
-    groundMat->base.scatter = lambertianScatter;
-    groundMat->albedo = groundColor;
-    
-    groundSphere->center = groundCenter;
-    groundSphere->radius = 1000.0;
-    groundSphere->mat = (Material*)groundMat;
+    Lambertian* groundMat = matLambertianInit(groundColor);
+    Sphere* groundSphere = spInit(groundCenter, 1000.0, (Material*)groundMat);
 
-    metalMat->base.scatter = metalScatter;
-    metalMat->albedo = metalColor;
-    metalMat->fuzz = 0.0;
-    
-    metalSphere->center = metalCenter;
-    metalSphere->radius = 1.0;
-    metalSphere->mat = (Material*)metalMat;
+    Metal* metalMat = matMetalInit(metalColor, 0.0);
+    Sphere* metalSphere = spInit(metalCenter, 1.0, (Material*)metalMat);
 
     scInit(10);
     scAdd(groundSphere);
@@ -101,43 +87,31 @@ void main(void) {
             center.z = b + 0.9 * randd();
         
             temp1 = v3Subtract(&center, &temp);
-            if (pow(v3InvLen(&temp1), -1) > 0.9) {
+            if (pow(v3Len(&temp1), -1) > 0.9) {
                 if (choose_mat < 0.8) {
-                    Sphere* sphere = malloc(sizeof(Sphere));
-                    Lambertian* lambertMat = malloc(sizeof(Lambertian));
                     // diffuse
                     vec3 albedoVec = v3Random();
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
-                    lambertMat->base.scatter = lambertianScatter;
-                    lambertMat->albedo = albedo;
-                    sphere->center = center;
-                    sphere->radius = 0.2;
-                    sphere->mat = (Material*)lambertMat;
+
+                    Lambertian* lambertMat = matLambertianInit(albedo);
+                    Sphere* sphere = spInit(center, 0.2, (Material*)lambertMat);
+                  
                     scAdd(sphere);
                 } else if (choose_mat < 0.95) {
                     // metal
-                    Sphere* sphere = malloc(sizeof(Sphere));
-                    Metal* metalMat = malloc(sizeof(Metal));
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
-                    metalMat->base.scatter = metalScatter;
-                    metalMat->albedo = albedo;
-                    metalMat->fuzz = fuzz;
-                    sphere->center = center;
-                    sphere->radius = 0.2;
-                    sphere->mat = (Material*)metalMat;
+                    
+                    Metal* metalMat = matMetalInit(albedo, fuzz);
+                    Sphere* sphere = spInit(center, 0.2, (Material*)metalMat);
+                    
                     scAdd(sphere);
                 } else {
                     // glass
-                    Sphere* sphere = malloc(sizeof(Sphere));
-                    Dielectric* dielectricMat = malloc(sizeof(Dielectric));
-                    dielectricMat->base.scatter = dielectricScatter;
-                    dielectricMat->refractionIndex = 1.5;
-                   
-                    sphere->center = center;
-                    sphere->radius = 0.2;
-                    sphere->mat = (Material*)dielectricMat;
+                    Dielectric* dielectricMat = matDielectricInit(1.5);
+                    Sphere* sphere = spInit(center, 0.2, (Material*)dielectricMat);
+                    
                     scAdd(sphere);
                 }
             }

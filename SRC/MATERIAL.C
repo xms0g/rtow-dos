@@ -3,7 +3,35 @@
 #include "ray.h"
 #include "math.h"
 
+static bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+static bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+static bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 static double reflectance(double cosine, double refractionIndex);
+
+Lambertian* matLambertianInit(color albedo) {
+    Lambertian* mat = malloc(sizeof(Lambertian));
+    mat->base.scatter = lambertianScatter;
+    mat->albedo = albedo;
+    
+    return mat;
+}
+
+Metal* matMetalInit(color albedo, double fuzz) {
+    Metal* mat = malloc(sizeof(Metal));
+    mat->base.scatter = metalScatter;
+    mat->albedo = albedo;
+    mat->fuzz = fuzz;
+    
+    return mat;
+}
+
+Dielectric* matDielectricInit(double refractionIndex) {
+    Dielectric* mat = malloc(sizeof(Dielectric));
+    mat->base.scatter = dielectricScatter;
+    mat->refractionIndex = refractionIndex;
+    
+    return mat;
+}
 
 bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
     vec3 randomUnitVec = v3RandomUnitVec();
