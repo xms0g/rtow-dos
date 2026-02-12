@@ -12,23 +12,25 @@ typedef struct Sphere {
     vec3 center;
     double radius;
     struct Material* mat;
+
+    bool (*hit)(const struct Sphere*, const struct Ray*, double, double, struct HitRecord*);
 } Sphere;
 
-typedef struct {    
+typedef struct SphereArray {    
     int count;      
     int capacity;   
-    Sphere* data;     
+    Sphere* data;
+    
+    void (*pushback)(struct SphereArray*, const struct Sphere*);
+    void (*remove)(struct SphereArray*, int);
+    struct Sphere* (*at)(struct SphereArray*, int);
+    void (*clear)(struct SphereArray*);
+    void (*free)(struct SphereArray*);
 } SphereArray;
 
-Sphere* spInit(vec3 center, double radius, struct Material* mat);
+Sphere* newSphere(vec3 center, double radius, struct Material* mat);
 
-bool spHit(const Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
+void newSphereArray(SphereArray* sa, int size);
 
-void saInit(SphereArray* sa, int size);
-void saPushback(SphereArray* sa, const Sphere* sphere);
-void saRemove(SphereArray* sa, int index);
-Sphere* saAt(SphereArray* sa, int index);
-void saClear(SphereArray* sa);
-void saFree(SphereArray* sa);
 
 #endif

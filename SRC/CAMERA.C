@@ -1,22 +1,31 @@
 #include "camera.h"
+#include <stddef.h>
 #include "math.h"
 
 static vec3 sampleSquare();
 static vec3 camDefocusDiskSample(const Camera* cam);
+static Ray getRay(const Camera* cam, int x, int y);
 
-void camInit(Camera* cam, double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
+Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
+    Camera* this = malloc(sizeof(Camera));
+    
+    int imageHeight;
     double theta, h, viewportHeight, viewportWidth, defocusRadius;
     vec3 subLookFromAt, w, crossVupW, u, v, viewport_u, viewport_v, addUV, halfAddUV, mulWFocusDist, viewportUpperLeft, pixel00Offset;
     
-    int imageHeight = (int)(imageWidth / aspectRatio);
+    if (this == NULL) {
+        return NULL;
+    }
+    
+    imageHeight = (int)(imageWidth / aspectRatio);
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
     theta = degree2radian(vfov);
     h = tan(theta/2);
     viewportHeight = 2.0 * h * focusDist;
     viewportWidth = viewportHeight * ((double)imageWidth/imageHeight);
 
-    cam->center = *lookfrom;
-    cam->defocusAngle = defocusAngle;
+    this->center = *lookfrom;
+    this->defocusAngle = defocusAngle;
 
     // Calculate the u,v,w v3Unit basis vectors for the camera coordinate frame.
     subLookFromAt = v3Subtract(lookfrom, lookat);
@@ -30,23 +39,27 @@ void camInit(Camera* cam, double aspectRatio, double vfov, double defocusAngle, 
     viewport_v = v3MultiplyN(&v, -viewportHeight);
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-    cam->pixelDeltaU = v3DivideN(&viewport_u, imageWidth);
-    cam->pixelDeltaV = v3DivideN(&viewport_v, imageHeight);
+    this->pixelDeltaU = v3DivideN(&viewport_u, imageWidth);
+    this->pixelDeltaV = v3DivideN(&viewport_v, imageHeight);
 
     // Calculate the location of the upper left pixel.
     addUV = v3Add(&viewport_u, &viewport_v);
     halfAddUV = v3MultiplyN(&addUV, 0.5);
     mulWFocusDist = v3MultiplyN(&w, focusDist);
-    viewportUpperLeft = v3Subtract(&cam->center, &mulWFocusDist);
+    viewportUpperLeft = v3Subtract(&this->center, &mulWFocusDist);
     viewportUpperLeft = v3Subtract(&viewportUpperLeft, &halfAddUV);
-    pixel00Offset = v3Add(&cam->pixelDeltaU, &cam->pixelDeltaV);
+    pixel00Offset = v3Add(&this->pixelDeltaU, &this->pixelDeltaV);
     pixel00Offset = v3MultiplyN(&pixel00Offset, 0.5);
-    cam->pixel00Loc = v3Add(&viewportUpperLeft, &pixel00Offset);
+    this->pixel00Loc = v3Add(&viewportUpperLeft, &pixel00Offset);
 
     // Calculate the camera defocus disk basis vectors.
     defocusRadius = focusDist * tan(degree2radian(defocusAngle / 2));
-    cam->defocusDiskU = v3MultiplyN(&u, defocusRadius);
-    cam->defocusDiskV = v3MultiplyN(&v, defocusRadius);
+    this->defocusDiskU = v3MultiplyN(&u, defocusRadius);
+    this->defocusDiskV = v3MultiplyN(&v, defocusRadius);
+
+    this->getRay = getRay;
+    
+    return this;
 }
 
 Ray getRay(const Camera* cam, int x, int y) {

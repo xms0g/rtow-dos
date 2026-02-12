@@ -13,9 +13,9 @@ typedef struct Scene {
 
     void (*add)(struct Scene*, const struct Sphere*);
     void (*clear)(struct Scene*);
-    bool (*hit)(const struct Scene*, const struct Ray*, double, double, struct HitRecord*);
+    bool (*hit)(struct Scene*, const struct Ray*, double, double, struct HitRecord*);
 } Scene;
 
-void scInit(Scene* this, int size);
+Scene* newScene(int size);
 
 #endif

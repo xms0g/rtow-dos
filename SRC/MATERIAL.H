@@ -7,7 +7,7 @@ struct Ray;
 struct HitRecord;
 
 typedef struct Material {
-    bool (*scatter)(const struct Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+    bool (*scatter)(const struct Material*, const struct Ray*, const struct HitRecord*, color*, struct Ray*);
 } Material;
 
 typedef struct Lambertian {
@@ -26,10 +26,10 @@ typedef struct Dielectric {
     double refractionIndex;
 } Dielectric;
 
-Lambertian* matLambertianInit(color albedo);
+Lambertian* newLambertianMat(color albedo);
 
-Metal* matMetalInit(color albedo, double fuzz);
+Metal* newMetalMat(color albedo, double fuzz);
 
-Dielectric* matDielectricInit(double refractionIndex);
+Dielectric* newDielectricMat(double refractionIndex);
 
 #endif

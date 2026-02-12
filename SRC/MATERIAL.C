@@ -1,4 +1,5 @@
 #include "material.h"
+#include <stddef.h>
 #include "hitrcd.h"
 #include "ray.h"
 #include "math.h"
@@ -8,16 +9,22 @@ static bool metalScatter(const Material* mat, const struct Ray* in, const struct
 static bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 static double reflectance(double cosine, double refractionIndex);
 
-Lambertian* matLambertianInit(color albedo) {
+Lambertian* newLambertianMat(color albedo) {
     Lambertian* mat = malloc(sizeof(Lambertian));
+    if (mat == NULL) {
+        return NULL;
+    }
     mat->base.scatter = lambertianScatter;
     mat->albedo = albedo;
     
     return mat;
 }
 
-Metal* matMetalInit(color albedo, double fuzz) {
+Metal* newMetalMat(color albedo, double fuzz) {
     Metal* mat = malloc(sizeof(Metal));
+    if (mat == NULL) {
+        return NULL;
+    }
     mat->base.scatter = metalScatter;
     mat->albedo = albedo;
     mat->fuzz = fuzz;
@@ -25,8 +32,11 @@ Metal* matMetalInit(color albedo, double fuzz) {
     return mat;
 }
 
-Dielectric* matDielectricInit(double refractionIndex) {
+Dielectric* newDielectricMat(double refractionIndex) {
     Dielectric* mat = malloc(sizeof(Dielectric));
+    if (mat == NULL) {
+        return NULL;
+    }
     mat->base.scatter = dielectricScatter;
     mat->refractionIndex = refractionIndex;
     

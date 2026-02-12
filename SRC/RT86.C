@@ -61,22 +61,21 @@ color rayColor(const Ray* ray, int depth, Scene* sc) {
 
 void main(void) {
     int a, b, x, y, i;
-    Camera cam;
-    Scene sc;
+    Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
+    Scene* sc = newScene(30);
     vec3 groundCenter = {0.0, -1000, 0.0};
     color groundColor = {0.5, 0.5, 0.5};
     vec3 metalCenter = {4, 1, 0};
     color metalColor = {0.7, 0.6, 0.5};
     
-    Lambertian* groundMat = matLambertianInit(groundColor);
-    Sphere* groundSphere = spInit(groundCenter, 1000.0, (Material*)groundMat);
+    Lambertian* groundMat = newLambertianMat(groundColor);
+    Sphere* groundSphere = newSphere(groundCenter, 1000.0, (Material*)groundMat);
 
-    Metal* metalMat = matMetalInit(metalColor, 0.0);
-    Sphere* metalSphere = spInit(metalCenter, 1.0, (Material*)metalMat);
+    Metal* metalMat = newMetalMat(metalColor, 0.0);
+    Sphere* metalSphere = newSphere(metalCenter, 1.0, (Material*)metalMat);
 
-    scInit(&sc, 10);
-    sc.add(&sc, groundSphere);
-    sc.add(&sc, metalSphere);
+    sc->add(sc, groundSphere);
+    sc->add(sc, metalSphere);
     
     for (a = -5; a < 5; a++) {
         for (b = -5; b < 5; b++) {
@@ -95,31 +94,29 @@ void main(void) {
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
 
-                    Lambertian* lambertMat = matLambertianInit(albedo);
-                    Sphere* sphere = spInit(center, 0.2, (Material*)lambertMat);
+                    Lambertian* lambertMat = newLambertianMat(albedo);
+                    Sphere* sphere = newSphere(center, 0.2, (Material*)lambertMat);
                   
-                    sc.add(&sc, sphere);
+                    sc->add(sc, sphere);
                 } else if (choose_mat < 0.95) {
                     // metal
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
                     
-                    Metal* metalMat = matMetalInit(albedo, fuzz);
-                    Sphere* sphere = spInit(center, 0.2, (Material*)metalMat);
+                    Metal* metalMat = newMetalMat(albedo, fuzz);
+                    Sphere* sphere = newSphere(center, 0.2, (Material*)metalMat);
                     
-                    sc.add(&sc, sphere);
+                    sc->add(sc, sphere);
                 } else {
                     // glass
-                    Dielectric* dielectricMat = matDielectricInit(1.5);
-                    Sphere* sphere = spInit(center, 0.2, (Material*)dielectricMat);
+                    Dielectric* dielectricMat = newDielectricMat(1.5);
+                    Sphere* sphere = newSphere(center, 0.2, (Material*)dielectricMat);
                     
-                    sc.add(&sc, sphere);
+                    sc->add(sc, sphere);
                 }
             }
         }
     }
-
-    camInit(&cam, ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
    
     _initMode(MODE_VGA_13H);
 
@@ -131,8 +128,8 @@ void main(void) {
             color pixelColor = {0, 0, 0};
             
             for (i = 0; i < SAMPLES_PER_PIXEL; ++i) {
-                struct Ray r = getRay(&cam, x, y);
-                vec3 rayCol = rayColor(&r, MAX_DEPTH, &sc);
+                struct Ray r = cam->getRay(cam, x, y);
+                vec3 rayCol = rayColor(&r, MAX_DEPTH, sc);
                 pixelColor = v3Add(&pixelColor, &rayCol);
             }
             
@@ -142,6 +139,8 @@ void main(void) {
     }
 
     getch();
-    sc.clear(&sc);
+    sc->clear(sc);
+    free(sc);
+    free(cam);
     _initMode(MODE_VGA_3H);
 }

@@ -13,10 +13,10 @@ typedef struct Camera {
     double defocusAngle;   // Variation angle of rays through each pixel
     vec3 defocusDiskU;     // Defocus disk horizontal radius
     vec3 defocusDiskV;     // Defocus disk vertical radius
+
+    Ray (*getRay)(const struct Camera*, int, int);
 } Camera;
 
-void camInit(Camera* cam, double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup);
-
-Ray getRay(const Camera* cam, int x, int y);
+Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup);
 
 #endif
