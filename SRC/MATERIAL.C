@@ -5,7 +5,7 @@
 
 static double reflectance(double cosine, double refractionIndex);
 
-bool lambertianScatter(const Lambertian* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
+bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
     vec3 randomUnitVec = v3RandomUnitVec();
     vec3 scatterDir = v3Add(&rec->normal, &randomUnitVec);
     (void)in;
@@ -16,28 +16,28 @@ bool lambertianScatter(const Lambertian* mat, const struct Ray* in, const struct
         
     scattered->origin = rec->p;
     scattered->direction = scatterDir;
-    *attenuation = mat->albedo;
+    *attenuation = ((Lambertian*)mat)->albedo;
     
     return true;
 }
 
-bool metalScatter(const Metal* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
+bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
     vec3 reflected = v3Reflect(&in->direction, &rec->normal);
     vec3 randomUnitVec = v3RandomUnitVec();
     vec3 reflectedUnit = v3Unit(&reflected);
-    vec3 fuzzVec = v3MultiplyN(&randomUnitVec, mat->fuzz);
+    vec3 fuzzVec = v3MultiplyN(&randomUnitVec, ((Metal*)mat)->fuzz);
     reflected = v3Add(&reflectedUnit, &fuzzVec);
         
     scattered->origin = rec->p;
     scattered->direction = reflected;
         
-    *attenuation = mat->albedo;
+    *attenuation = ((Metal*)mat)->albedo;
     return (bool)(v3Dot(&scattered->direction, &rec->normal) > 0);
 }
 
-bool dielectricScatter(const Dielectric* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
+bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
     vec3 dir;
-    double ri = rec->frontFace ? (1.0 / mat->refractionIndex) : mat->refractionIndex;
+    double ri = rec->frontFace ? (1.0 / ((Dielectric*)mat)->refractionIndex) : ((Dielectric*)mat)->refractionIndex;
     vec3 unitDir = v3Unit(&in->direction);
     vec3 negated = v3Negate(&unitDir);
     double cosTheta = fmin(v3Dot(&negated, &rec->normal), 1.0);

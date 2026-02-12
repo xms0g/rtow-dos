@@ -43,25 +43,9 @@ color rayColor(const Ray* ray, int depth) {
     if (scHit(ray, 0.001, DBL_MAX, &rec)) {
         Ray scattered;
         color attenuation;
-        switch (rec.mat->type) {
-            case LAMBERTIAN:
-                if (lambertianScatter((const Lambertian*)rec.mat, ray, &rec, &attenuation, &scattered)) {
-                    vec3 scatteredCol = rayColor(&scattered, depth - 1);
-                    return v3Multiply(&attenuation, &scatteredCol);
-                }
-                break;
-            case METAL:
-                if (metalScatter((const Metal*)rec.mat, ray, &rec, &attenuation, &scattered)) {
-                    vec3 scatteredCol = rayColor(&scattered, depth - 1);
-                    return v3Multiply(&attenuation, &scatteredCol);
-                }
-                break;
-            case DIELECTRIC:
-                if (dielectricScatter((const Dielectric*)rec.mat, ray, &rec, &attenuation, &scattered)) {
-                    vec3 scatteredCol = rayColor(&scattered, depth - 1);
-                    return v3Multiply(&attenuation, &scatteredCol);
-                }
-                break;
+        if (rec.mat->scatter(rec.mat, ray, &rec, &attenuation, &scattered)) {
+            vec3 scatteredCol = rayColor(&scattered, depth - 1);
+            return v3Multiply(&attenuation, &scatteredCol);
         }
        
         return zeroColor;
@@ -88,14 +72,14 @@ void main(void) {
     Sphere* metalSphere = malloc(sizeof(Sphere));
     Metal* metalMat = malloc(sizeof(Metal));
     
-    groundMat->base.type = LAMBERTIAN;
+    groundMat->base.scatter = lambertianScatter;
     groundMat->albedo = groundColor;
     
     groundSphere->center = groundCenter;
     groundSphere->radius = 1000.0;
     groundSphere->mat = (Material*)groundMat;
 
-    metalMat->base.type = METAL;
+    metalMat->base.scatter = metalScatter;
     metalMat->albedo = metalColor;
     metalMat->fuzz = 0.0;
     
@@ -125,7 +109,7 @@ void main(void) {
                     vec3 albedoVec = v3Random();
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
-                    lambertMat->base.type = LAMBERTIAN;
+                    lambertMat->base.scatter = lambertianScatter;
                     lambertMat->albedo = albedo;
                     sphere->center = center;
                     sphere->radius = 0.2;
@@ -137,7 +121,7 @@ void main(void) {
                     Metal* metalMat = malloc(sizeof(Metal));
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
-                    metalMat->base.type = METAL;
+                    metalMat->base.scatter = metalScatter;
                     metalMat->albedo = albedo;
                     metalMat->fuzz = fuzz;
                     sphere->center = center;
@@ -148,7 +132,7 @@ void main(void) {
                     // glass
                     Sphere* sphere = malloc(sizeof(Sphere));
                     Dielectric* dielectricMat = malloc(sizeof(Dielectric));
-                    dielectricMat->base.type = DIELECTRIC;
+                    dielectricMat->base.scatter = dielectricScatter;
                     dielectricMat->refractionIndex = 1.5;
                    
                     sphere->center = center;

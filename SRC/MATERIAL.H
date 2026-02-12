@@ -6,14 +6,8 @@
 struct Ray;
 struct HitRecord;
 
-enum MaterialType {
-    LAMBERTIAN,
-    METAL,
-    DIELECTRIC
-};
-
 typedef struct Material {
-    enum MaterialType type;
+    bool (*scatter)(const struct Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 } Material;
 
 typedef struct Lambertian {
@@ -32,10 +26,10 @@ typedef struct Dielectric {
     double refractionIndex;
 } Dielectric;
 
-bool lambertianScatter(const Lambertian* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 
-bool metalScatter(const Metal* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 
-bool dielectricScatter(const Dielectric* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
+bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 
 #endif
