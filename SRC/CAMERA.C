@@ -3,7 +3,7 @@
 #include "math.h"
 
 static vec3 sampleSquare();
-static vec3 camDefocusDiskSample(const Camera* cam);
+static vec3 defocusDiskSample(const Camera* cam);
 static Ray getRay(const Camera* cam, int x, int y);
 
 Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
@@ -71,7 +71,7 @@ Ray getRay(const Camera* cam, int x, int y) {
     vec3 sumPixDeltas = v3Add(&pixDeltaUMult, &pixDeltaVMult);
     vec3 pixelSample = v3Add(&cam->pixel00Loc, &sumPixDeltas);
 
-    rayOrig = (cam->defocusAngle <= 0) ? cam->center : camDefocusDiskSample(cam);
+    rayOrig = (cam->defocusAngle <= 0) ? cam->center : defocusDiskSample(cam);
     rayDir = v3Subtract(&pixelSample, &rayOrig);
     
     result.origin = rayOrig;
@@ -90,7 +90,7 @@ vec3 sampleSquare() {
     return result;
 }
 
-vec3 camDefocusDiskSample(const Camera* cam) {
+vec3 defocusDiskSample(const Camera* cam) {
     // Returns a random point in the camera defocus disk.
     vec3 p = v3RandomInUnitDisk();
     vec3 defocusU = v3MultiplyN(&cam->defocusDiskU, p.x);
