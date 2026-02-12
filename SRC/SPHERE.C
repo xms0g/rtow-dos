@@ -13,7 +13,7 @@ static void saClear(struct SphereArray* sa);
 static void saFree(struct SphereArray* sa);
 
 Sphere* newSphere(vec3 center, double radius, struct Material* mat) {
-    Sphere* sphere = malloc(sizeof(Sphere));
+    Sphere* sphere = (Sphere*)malloc(sizeof(Sphere));
     if (sphere == NULL) {
         return NULL;
     }

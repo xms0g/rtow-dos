@@ -10,7 +10,7 @@ static bool dielectricScatter(const Material* mat, const struct Ray* in, const s
 static double reflectance(double cosine, double refractionIndex);
 
 Lambertian* newLambertianMat(color albedo) {
-    Lambertian* mat = malloc(sizeof(Lambertian));
+    Lambertian* mat = (Lambertian*)malloc(sizeof(Lambertian));
     if (mat == NULL) {
         return NULL;
     }
@@ -21,7 +21,7 @@ Lambertian* newLambertianMat(color albedo) {
 }
 
 Metal* newMetalMat(color albedo, double fuzz) {
-    Metal* mat = malloc(sizeof(Metal));
+    Metal* mat = (Metal*)malloc(sizeof(Metal));
     if (mat == NULL) {
         return NULL;
     }
@@ -33,7 +33,7 @@ Metal* newMetalMat(color albedo, double fuzz) {
 }
 
 Dielectric* newDielectricMat(double refractionIndex) {
-    Dielectric* mat = malloc(sizeof(Dielectric));
+    Dielectric* mat = (Dielectric*)malloc(sizeof(Dielectric));
     if (mat == NULL) {
         return NULL;
     }

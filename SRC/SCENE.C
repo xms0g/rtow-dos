@@ -10,7 +10,7 @@ static void scClear(struct Scene* this);
 static bool scHit(struct Scene* this, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
 
 Scene* newScene(int size) {
-    Scene* this = malloc(sizeof(Scene));
+    Scene* this = (Scene*)malloc(sizeof(Scene));
     if (this == NULL) {
         return NULL;
     }

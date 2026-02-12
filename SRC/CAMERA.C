@@ -7,7 +7,7 @@ static vec3 camDefocusDiskSample(const Camera* cam);
 static Ray getRay(const Camera* cam, int x, int y);
 
 Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
-    Camera* this = malloc(sizeof(Camera));
+    Camera* this = (Camera*)malloc(sizeof(Camera));
     
     int imageHeight;
     double theta, h, viewportHeight, viewportWidth, defocusRadius;
