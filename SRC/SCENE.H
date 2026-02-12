@@ -2,17 +2,20 @@
 #define SCENE_H
 
 #include "bool.h"
+#include "sphere.h"
 
 struct Ray;
 struct HitRecord;
-struct Sphere;
 
-void scInit(int size);
+typedef struct Scene {
+    int objectCount;
+    SphereArray objects;
 
-void scAdd(const struct Sphere* object);
+    void (*add)(struct Scene*, const struct Sphere*);
+    void (*clear)(struct Scene*);
+    bool (*hit)(const struct Scene*, const struct Ray*, double, double, struct HitRecord*);
+} Scene;
 
-void scClear();
-
-bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
+void scInit(Scene* this, int size);
 
 #endif

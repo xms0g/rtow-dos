@@ -3,27 +3,32 @@
 #include "sphere.h"
 #include "ray.h"
 
-static SphereArray objects;
+static void scAdd(Scene* this, const struct Sphere* object);
+static void scClear(Scene* this);
+static bool scHit(Scene* this, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
 
-void scInit(int size) {
-    saInit(&objects, size);
+void scInit(Scene* this, int size) {
+    saInit(&this->objects, size);
+    this->add = scAdd;
+    this->clear = scClear;
+    this->hit = scHit;
 }
 
-void scAdd(const struct Sphere* object) {
-    saPushback(&objects, object);
+void scAdd(Scene* this, const struct Sphere* object) {
+    saPushback(&this->objects, object);
 }
 
-void scClear() {
-    saFree(&objects);
+void scClear(Scene* this) {
+    saFree(&this->objects);
 }
 
- bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
+ bool scHit(Scene* this, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
     int i;
     bool hitAnything = false;
     double closestSoFar = tmax;
 
-    for (i = 0; i < objects.count; ++i) {
-        if (spHit(saAt(&objects, i), ray, tmin, closestSoFar, rec)) {
+    for (i = 0; i < this->objects.count; ++i) {
+        if (spHit(saAt(&this->objects, i), ray, tmin, closestSoFar, rec)) {
             hitAnything = true;
             closestSoFar = rec->t;
         }
