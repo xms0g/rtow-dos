@@ -174,7 +174,7 @@ vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat) {
     vec3 negated = v3Negate(uv);
     double cos_theta = fmin(v3Dot(&negated, n), 1.0);
     vec3 nMultCosTheta = v3MultiplyN(n, cos_theta);
-    vec3 rayOutPerp = v3Add(&negated, &nMultCosTheta);
+    vec3 rayOutPerp = v3Add(uv, &nMultCosTheta);
     rayOutPerp = v3MultiplyN(&rayOutPerp, etaiOverEtat);
         
     rayOutParallel = v3DivideN(n, -invSqrt(fabs(1.0 - v3LenSquared(&rayOutPerp))));
