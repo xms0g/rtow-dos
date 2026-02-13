@@ -67,18 +67,18 @@ void main(void) {
     color groundColor = {0.5, 0.5, 0.5};
     vec3 metalCenter = {4, 1, 0};
     color metalColor = {0.7, 0.6, 0.5};
-    
-    Lambertian* groundMat = newLambertianMat(groundColor);
+    vec3 glassCenter = {0, 1, 0};
+    Metal* metalMat;
+    Dielectric* dielectricMat;
+    Sphere* metalSphere, *glassSphere;
+
+    Lambertian* groundMat = newLambertian(groundColor);
     Sphere* groundSphere = newSphere(groundCenter, 1000.0, (Material*)groundMat);
 
-    Metal* metalMat = newMetalMat(metalColor, 0.0);
-    Sphere* metalSphere = newSphere(metalCenter, 1.0, (Material*)metalMat);
-
     sc->add(sc, groundSphere);
-    sc->add(sc, metalSphere);
     
-    for (a = -5; a < 5; a++) {
-        for (b = -5; b < 5; b++) {
+    for (a = -10; a < 10; a++) {
+        for (b = -10; b < 10; b++) {
             vec3 center, temp = {4, 0.2, 0}, temp1;
             double choose_mat = randd();
             
@@ -94,7 +94,7 @@ void main(void) {
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
 
-                    Lambertian* lambertMat = newLambertianMat(albedo);
+                    Lambertian* lambertMat = newLambertian(albedo);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)lambertMat);
                   
                     sc->add(sc, sphere);
@@ -103,13 +103,13 @@ void main(void) {
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
                     
-                    Metal* metalMat = newMetalMat(albedo, fuzz);
+                    Metal* metalMat = newMetal(albedo, fuzz);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)metalMat);
                     
                     sc->add(sc, sphere);
                 } else {
                     // glass
-                    Dielectric* dielectricMat = newDielectricMat(1.5);
+                    Dielectric* dielectricMat = newDielectric(1.5);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)dielectricMat);
                     
                     sc->add(sc, sphere);
@@ -117,7 +117,16 @@ void main(void) {
             }
         }
     }
+
+    metalMat = newMetal(metalColor, 0.0);
+    metalSphere = newSphere(metalCenter, 1.0, (Material*)metalMat);
+
+    dielectricMat = newDielectric(1.5);
+    glassSphere = newSphere(glassCenter, 1.0, (Material*)dielectricMat);
    
+    sc->add(sc, metalSphere);
+    sc->add(sc, glassSphere);
+
     _initMode(MODE_VGA_13H);
 
     _waitvretrace();

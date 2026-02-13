@@ -26,10 +26,10 @@ typedef struct Dielectric {
     double refractionIndex;
 } Dielectric;
 
-Lambertian* newLambertianMat(color albedo);
+Lambertian* newLambertian(color albedo);
 
-Metal* newMetalMat(color albedo, double fuzz);
+Metal* newMetal(color albedo, double fuzz);
 
-Dielectric* newDielectricMat(double refractionIndex);
+Dielectric* newDielectric(double refractionIndex);
 
 #endif
