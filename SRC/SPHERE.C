@@ -14,6 +14,7 @@ static void saFree(struct SphereArray* sa);
 
 Sphere* newSphere(vec3 center, double radius, struct Material* mat) {
     Sphere* sphere = (Sphere*)malloc(sizeof(Sphere));
+
     if (sphere == NULL) {
         return NULL;
     }
@@ -58,15 +59,27 @@ bool spHit(const struct Sphere* sphere, const struct Ray* ray, double tmin, doub
     return true;
 }
 
-void newSphereArray(struct SphereArray* sa, int size) {
+SphereArray* newSphereArray(int size) {
+    SphereArray* sa = (SphereArray*)malloc(sizeof(SphereArray));
+
+    if (sa == NULL) {
+        return NULL;
+    }
     sa->count = 0;
     sa->capacity = size;
     sa->data = (Sphere*)malloc(size * sizeof(Sphere));
+
+    if (sa->data == NULL) {
+        free(sa);
+        return NULL;
+    }
     sa->pushback = saPushback;
     sa->remove = saRemove;
     sa->at = saAt;
     sa->clear = saClear;
     sa->free = saFree;
+
+    return sa;
 }
 
 void saPushback(struct SphereArray* sa, const Sphere* sphere) {
@@ -110,6 +123,7 @@ void saFree(struct SphereArray* sa) {
     for (i = 0; i < sa->count; ++i) {
         free(sa->data[i].mat);
     }
+    
     free(sa->data);
     sa->data = NULL;
 }

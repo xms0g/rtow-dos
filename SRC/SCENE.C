@@ -11,6 +11,7 @@ static bool scHit(struct Scene* this, const struct Ray* ray, double tmin, double
 
 Scene* newScene(int size) {
     Scene* this = (Scene*)malloc(sizeof(Scene));
+
     if (this == NULL) {
         return NULL;
     }
@@ -18,16 +19,23 @@ Scene* newScene(int size) {
     this->clear = scClear;
     this->hit = scHit;
     
-    newSphereArray(&this->objects, size);
+    this->objects = newSphereArray(size);
+    
+    if (this->objects == NULL) {
+        free(this);
+        return NULL;
+    }
     return this;
 }
 
 void scAdd(struct Scene* this, const struct Sphere* object) {
-    this->objects.pushback(&this->objects, object);
+    this->objects->pushback(this->objects, object);
 }
 
 void scClear(struct Scene* this) {
-    this->objects.free(&this->objects);
+    this->objects->free(this->objects);
+    free(this->objects);
+    this->objects = NULL;
 }
 
  bool scHit(struct Scene* this, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
@@ -35,8 +43,8 @@ void scClear(struct Scene* this) {
     bool hitAnything = false;
     double closestSoFar = tmax;
 
-    for (i = 0; i < this->objects.count; ++i) {
-        const Sphere* sphere = this->objects.at(&this->objects, i);
+    for (i = 0; i < this->objects->count; ++i) {
+        const Sphere* sphere = this->objects->at(this->objects, i);
 
         if (sphere->hit(sphere, ray, tmin, closestSoFar, rec)) {
             hitAnything = true;

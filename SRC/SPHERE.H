@@ -30,7 +30,7 @@ typedef struct SphereArray {
 
 Sphere* newSphere(vec3 center, double radius, struct Material* mat);
 
-void newSphereArray(SphereArray* sa, int size);
+SphereArray* newSphereArray(int size);
 
 
 #endif

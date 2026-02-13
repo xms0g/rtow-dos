@@ -9,7 +9,7 @@ struct HitRecord;
 
 typedef struct Scene {
     int objectCount;
-    SphereArray objects;
+    SphereArray* objects;
 
     void (*add)(struct Scene*, const struct Sphere*);
     void (*clear)(struct Scene*);
