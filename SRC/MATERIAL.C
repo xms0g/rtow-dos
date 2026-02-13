@@ -11,6 +11,7 @@ static double reflectance(double cosine, double refractionIndex);
 
 Lambertian* newLambertian(color albedo) {
     Lambertian* mat = (Lambertian*)malloc(sizeof(Lambertian));
+
     if (mat == NULL) {
         return NULL;
     }
@@ -22,6 +23,7 @@ Lambertian* newLambertian(color albedo) {
 
 Metal* newMetal(color albedo, double fuzz) {
     Metal* mat = (Metal*)malloc(sizeof(Metal));
+
     if (mat == NULL) {
         return NULL;
     }
@@ -34,6 +36,7 @@ Metal* newMetal(color albedo, double fuzz) {
 
 Dielectric* newDielectric(double refractionIndex) {
     Dielectric* mat = (Dielectric*)malloc(sizeof(Dielectric));
+    
     if (mat == NULL) {
         return NULL;
     }
