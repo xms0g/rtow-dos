@@ -7,12 +7,12 @@ static vec3 defocusDiskSample(const Camera* cam);
 static Ray getRay(const Camera* cam, int x, int y);
 
 Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
-    Camera* this = (Camera*)malloc(sizeof(Camera));
-    
     int imageHeight;
     double theta, h, viewportHeight, viewportWidth, defocusRadius;
     vec3 subLookFromAt, w, crossVupW, u, v, viewport_u, viewport_v, addUV, halfAddUV, mulWFocusDist, viewportUpperLeft, pixel00Offset;
     
+    Camera* this = (Camera*)malloc(sizeof(Camera));
+
     if (this == NULL) {
         return NULL;
     }
