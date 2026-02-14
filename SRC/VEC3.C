@@ -93,7 +93,7 @@ double v3Dot(const vec3* v0, const vec3* v1) {
 
 }
 
-bool nearZero(const vec3* v) {
+bool v3NearZero(const vec3* v) {
     // Return true if the vector is close to zero in all dimensions.
     return (bool)((fabs(v->x) < 1e-8) && (fabs(v->y) < 1e-8) && (fabs(v->z) < 1e-8));
 }

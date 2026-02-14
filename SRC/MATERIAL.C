@@ -51,7 +51,7 @@ bool lambertianScatter(const Material* mat, const struct Ray* in, const struct H
     vec3 scatterDir = v3Add(&rec->normal, &randomUnitVec);
     (void)in;
     // Catch degenerate scatter direction
-    if (nearZero(&scatterDir)) {
+    if (v3NearZero(&scatterDir)) {
         scatterDir = rec->normal;
     }
         

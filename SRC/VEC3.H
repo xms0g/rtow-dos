@@ -33,7 +33,7 @@ double v3LenSquared(const vec3* v);
 
 double v3Dot(const vec3* v0, const vec3* v1);
 
-bool nearZero(const vec3* v);
+bool v3NearZero(const vec3* v);
 
 vec3 v3Cross(const vec3* v0, const vec3* v1);
 
