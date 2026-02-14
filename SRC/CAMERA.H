@@ -14,7 +14,7 @@ typedef struct Camera {
     vec3 defocusDiskU;     // Defocus disk horizontal radius
     vec3 defocusDiskV;     // Defocus disk vertical radius
 
-    Ray (*getRay)(const struct Camera*, int, int);
+    Ray (*getRay)(int, int);
 } Camera;
 
 Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup);

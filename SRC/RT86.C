@@ -40,7 +40,7 @@ color rayColor(const Ray* ray, int depth, Scene* sc) {
         return zeroColor;
     }
     
-    if (sc->hit(sc, ray, 0.001, DBL_MAX, &rec)) {
+    if (sc->hit(ray, 0.001, DBL_MAX, &rec)) {
         Ray scattered;
         color attenuation;
         if (rec.mat->scatter(rec.mat, ray, &rec, &attenuation, &scattered)) {
@@ -75,7 +75,7 @@ void main(void) {
     Lambertian* groundMat = newLambertian(groundColor);
     Sphere* groundSphere = newSphere(groundCenter, 1000.0, (Material*)groundMat);
 
-    sc->add(sc, groundSphere);
+    sc->add(groundSphere);
     
     for (a = -10; a < 10; a++) {
         for (b = -10; b < 10; b++) {
@@ -97,7 +97,7 @@ void main(void) {
                     Lambertian* lambertMat = newLambertian(albedo);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)lambertMat);
                   
-                    sc->add(sc, sphere);
+                    sc->add(sphere);
                 } else if (choose_mat < 0.95) {
                     // metal
                     vec3 albedo = v3RandomRange(0.5, 1);
@@ -106,13 +106,13 @@ void main(void) {
                     Metal* metalMat = newMetal(albedo, fuzz);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)metalMat);
                     
-                    sc->add(sc, sphere);
+                    sc->add(sphere);
                 } else {
                     // glass
                     Dielectric* dielectricMat = newDielectric(1.5);
                     Sphere* sphere = newSphere(center, 0.2, (Material*)dielectricMat);
                     
-                    sc->add(sc, sphere);
+                    sc->add(sphere);
                 }
             }
         }
@@ -124,8 +124,8 @@ void main(void) {
     dielectricMat = newDielectric(1.5);
     glassSphere = newSphere(glassCenter, 1.0, (Material*)dielectricMat);
    
-    sc->add(sc, metalSphere);
-    sc->add(sc, glassSphere);
+    sc->add(metalSphere);
+    sc->add(glassSphere);
 
     _initMode(MODE_VGA_13H);
 
@@ -137,7 +137,7 @@ void main(void) {
             color pixelColor = {0, 0, 0};
             
             for (i = 0; i < SAMPLES_PER_PIXEL; ++i) {
-                struct Ray r = cam->getRay(cam, x, y);
+                struct Ray r = cam->getRay(x, y);
                 vec3 rayCol = rayColor(&r, MAX_DEPTH, sc);
                 pixelColor = v3Add(&pixelColor, &rayCol);
             }
@@ -148,8 +148,6 @@ void main(void) {
     }
 
     getch();
-    sc->clear(sc);
-    free(sc);
-    free(cam);
+    sc->clear();
     _initMode(MODE_VGA_3H);
 }
