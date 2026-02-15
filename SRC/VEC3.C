@@ -22,10 +22,14 @@ vec3 v3Add(const vec3* v0, const vec3* v1) {
     return result;
 }
 
-void v3AddN(vec3* v, double N) {
-    v->x += N;
-    v->y += N;
-    v->z += N;
+vec3 v3AddN(vec3* v, double N) {
+    vec3 result;
+
+    result.x = v->x + N;
+    result.y = v->y + N;
+    result.z = v->z + N;
+
+    return result;
 }
 
 vec3 v3Subtract(const vec3* v0, const vec3* v1) {
@@ -76,8 +80,8 @@ vec3 v3DivideN(const vec3* v, double N) {
     return result;
 }
 
-void v3Normalize(vec3* v) {
-    *v = v3DivideN(v, v3Len(v));
+vec3 v3Normalize(vec3* v) {
+    return v3DivideN(v, v3Len(v));
 }
 
 double v3Len(const vec3* v) {

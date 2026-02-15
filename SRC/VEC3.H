@@ -13,7 +13,7 @@ vec3 v3Negate(const vec3* v);
 
 vec3 v3Add(const vec3* v0, const vec3* v1);
 
-void v3AddN(vec3* v, double N);
+vec3 v3AddN(vec3* v, double N);
 
 vec3 v3Subtract(const vec3* v0, const vec3* v1);
 
@@ -25,7 +25,7 @@ vec3 v3Divide(const vec3* v0, const vec3* v1);
 
 vec3 v3DivideN(const vec3* v, double n);
 
-void v3Normalize(vec3* v);
+vec3 v3Normalize(vec3* v);
 
 double v3Len(const vec3* v);
 
