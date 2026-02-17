@@ -11,7 +11,7 @@ struct Ray;
 typedef struct Sphere {
     vec3 center;
     double radius;
-    struct Material* mat;
+    const struct Material* mat;
 
     bool (*hit)(const struct Sphere*, const struct Ray*, double, double, struct HitRecord*);
 } Sphere;
@@ -19,7 +19,7 @@ typedef struct Sphere {
 typedef struct SphereArray {    
     int count;      
     int capacity;   
-    Sphere* data;
+    Sphere* const data;
     
     void (*pushback)(struct SphereArray*, const struct Sphere*);
     void (*remove)(struct SphereArray*, int);
@@ -28,7 +28,7 @@ typedef struct SphereArray {
     void (*free)(struct SphereArray*);
 } SphereArray;
 
-Sphere* newSphere(vec3 center, double radius, struct Material* mat);
+Sphere* newSphere(vec3 center, double radius, const struct Material* mat);
 
 SphereArray* newSphereArray(int size);
 
