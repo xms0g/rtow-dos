@@ -27,11 +27,11 @@ static const vec3 VUP = {0, 1, 0};
 static const vec3 LOOKFROM = {13, 2, 3};
 static const vec3 LOOKAT = {0, 0, 0};
 
-static vec3 col1 = {1.0, 1.0, 1.0};
-static vec3 col2 = {0.5, 0.7, 1.0};
-static vec3 zeroColor = {0, 0, 0};
+static const vec3 col1 = {1.0, 1.0, 1.0};
+static const vec3 col2 = {0.5, 0.7, 1.0};
+static const vec3 zeroColor = {0, 0, 0};
 
-color rayColor(const Ray* ray, int depth, Scene* sc) {
+color rayColor(const Ray* ray, int depth, const Scene* sc) {
     double a;
     HitRecord rec;
     vec3 unitDir, col1Scaled, col2Scaled;
@@ -61,19 +61,20 @@ color rayColor(const Ray* ray, int depth, Scene* sc) {
 
 void main(void) {
     int a, b, x, y, i;
-    Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
-    Scene* sc = newScene(30);
-    vec3 groundCenter = {0.0, -1000, 0.0};
-    color groundColor = {0.5, 0.5, 0.5};
-    vec3 metalCenter = {4, 1, 0};
-    color metalColor = {0.7, 0.6, 0.5};
-    vec3 glassCenter = {0, 1, 0};
-    Metal* metalMat;
-    Dielectric* dielectricMat;
-    Sphere* metalSphere, *glassSphere;
+    const Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
+    const Scene* sc = newScene(30);
+    const vec3 groundCenter = {0.0, -1000, 0.0};
+    const color groundColor = {0.5, 0.5, 0.5};
+    const vec3 metalCenter = {4, 1, 0};
+    const color metalColor = {0.7, 0.6, 0.5};
+    const vec3 glassCenter = {0, 1, 0};
+    const Metal* metalMat;
+    const Dielectric* dielectricMat;
+    const Sphere* metalSphere;
+    const Sphere* glassSphere;
 
-    Lambertian* groundMat = newLambertian(groundColor);
-    Sphere* groundSphere = newSphere(groundCenter, 1000.0, (Material*)groundMat);
+    const Lambertian* const groundMat = newLambertian(groundColor);
+    const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)groundMat);
 
     sc->add(groundSphere);
     
@@ -94,8 +95,8 @@ void main(void) {
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
 
-                    Lambertian* lambertMat = newLambertian(albedo);
-                    Sphere* sphere = newSphere(center, 0.2, (Material*)lambertMat);
+                    const Lambertian* const lambertMat = newLambertian(albedo);
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)lambertMat);
                   
                     sc->add(sphere);
                 } else if (choose_mat < 0.95) {
@@ -103,14 +104,14 @@ void main(void) {
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
                     
-                    Metal* metalMat = newMetal(albedo, fuzz);
-                    Sphere* sphere = newSphere(center, 0.2, (Material*)metalMat);
+                    const Metal* const metalMat = newMetal(albedo, fuzz);
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)metalMat);
                     
                     sc->add(sphere);
                 } else {
                     // glass
-                    Dielectric* dielectricMat = newDielectric(1.5);
-                    Sphere* sphere = newSphere(center, 0.2, (Material*)dielectricMat);
+                    const Dielectric* const dielectricMat = newDielectric(1.5);
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)dielectricMat);
                     
                     sc->add(sphere);
                 }
@@ -119,10 +120,10 @@ void main(void) {
     }
 
     metalMat = newMetal(metalColor, 0.0);
-    metalSphere = newSphere(metalCenter, 1.0, (Material*)metalMat);
+    metalSphere = newSphere(metalCenter, 1.0, (const Material*)metalMat);
 
     dielectricMat = newDielectric(1.5);
-    glassSphere = newSphere(glassCenter, 1.0, (Material*)dielectricMat);
+    glassSphere = newSphere(glassCenter, 1.0, (const Material*)dielectricMat);
    
     sc->add(metalSphere);
     sc->add(glassSphere);

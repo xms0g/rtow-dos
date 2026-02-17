@@ -12,7 +12,7 @@ typedef struct HitRecord {
     vec3 normal;
     double t;
     bool frontFace;
-    struct Material* mat;
+    const struct Material* mat;
 } HitRecord;
 
 void setFaceNormal(HitRecord* rec, const struct Ray* ray, const vec3* outwardNormal);
