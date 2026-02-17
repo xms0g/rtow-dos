@@ -19,9 +19,9 @@ Scene* newScene(int size) {
     this.objects = newSphereArray(size);
     
     if (this.objects == NULL) {
-        free(this);
         return NULL;
     }
+    
     return &this;
 }
 

@@ -18,6 +18,7 @@ Sphere* newSphere(vec3 center, double radius, struct Material* mat) {
     if (sphere == NULL) {
         return NULL;
     }
+
     sphere->center = center;
     sphere->radius = radius;
     sphere->mat = mat;
@@ -65,6 +66,7 @@ SphereArray* newSphereArray(int size) {
     if (sa == NULL) {
         return NULL;
     }
+
     sa->count = 0;
     sa->capacity = size;
     sa->data = (Sphere*)malloc(size * sizeof(Sphere));
@@ -73,6 +75,7 @@ SphereArray* newSphereArray(int size) {
         free(sa);
         return NULL;
     }
+    
     sa->pushback = saPushback;
     sa->remove = saRemove;
     sa->at = saAt;
