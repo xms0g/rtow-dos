@@ -11,6 +11,20 @@
 #include "material.h"
 #include "hitrcd.h"
 
+#define WIDTH 320
+#define HEIGHT 200
+#define SAMPLES_PER_PIXEL 10
+#define MAX_DEPTH 10
+#define PIXEL_SAMPLES_SCALE (1.0 / SAMPLES_PER_PIXEL)
+#define VFOV 20.0
+#define DEFOCUS_ANGLE 0.6
+#define FOCUS_DIST 10.0
+#define ASPECT_RATIO (4.0 / 3.0)
+
+static const vec3 VUP = {0, 1, 0};
+static const vec3 LOOKFROM = {13, 2, 3};
+static const vec3 LOOKAT = {0, 0, 0};
+
 color rayColor(const Ray* ray, int depth, const Scene* sc) {
     double a;
     HitRecord rec;
@@ -44,32 +58,25 @@ color rayColor(const Ray* ray, int depth, const Scene* sc) {
 
 void main(void) {
     int a, b, x, y, i;
-    const int WIDTH = 320;
-    const int HEIGHT = 200;
-    const int SAMPLES_PER_PIXEL = 10;
-    const int MAX_DEPTH = 10;
-    const double PIXEL_SAMPLES_SCALE = (1.0 / SAMPLES_PER_PIXEL);
-    const double VFOV = 20.0;
-    const double DEFOCUS_ANGLE = 0.6;
-    const double FOCUS_DIST = 10.0;
-    const double ASPECT_RATIO = (4.0 / 3.0);
-    const vec3 VUP = newVec3(0, 1, 0);
-    const vec3 LOOKFROM = newVec3(13, 2, 3);
-    const vec3 LOOKAT = newVec3(0, 0, 0);
-    const Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
-    const Scene* sc = newScene(30);
     const vec3 groundCenter = newVec3(0.0, -1000, 0.0);
     const color groundColor = newVec3(0.5, 0.5, 0.5);
     const vec3 metalCenter = newVec3(4, 1, 0);
     const color metalColor = newVec3(0.7, 0.6, 0.5);
     const vec3 glassCenter = newVec3(0, 1, 0);
+    const vec3 lambertCenter = newVec3(-4, 1, 0);
+    const color lambertColor = newVec3(0.4, 0.2, 0.1);
     const Metal* metalMat;
     const Dielectric* dielectricMat;
+    const Lambertian* lambertMat;
     const Sphere* metalSphere;
     const Sphere* glassSphere;
+    const Sphere* lambertSphere;
 
     const Lambertian* const groundMat = newLambertian(groundColor);
     const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)groundMat);
+    
+    const Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
+    const Scene* sc = newScene(100);
 
     sc->add(groundSphere);
     
@@ -116,9 +123,13 @@ void main(void) {
 
     dielectricMat = newDielectric(1.5);
     glassSphere = newSphere(glassCenter, 1.0, (const Material*)dielectricMat);
+
+    lambertMat = newLambertian(lambertColor);
+    lambertSphere = newSphere(lambertCenter, 1.0, (const Material*)lambertMat);
    
     sc->add(metalSphere);
     sc->add(glassSphere);
+    sc->add(lambertSphere);
 
     _initMode(MODE_VGA_13H);
 
