@@ -9,6 +9,8 @@ typedef struct vec3 {
     double z;
 } vec3;
 
+vec3 newVec3(double x, double y, double z);
+
 vec3 v3Negate(const vec3* v);
 
 vec3 v3Add(const vec3* v0, const vec3* v1);

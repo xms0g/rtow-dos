@@ -32,5 +32,4 @@ Sphere* newSphere(vec3 center, double radius, const struct Material* mat);
 
 SphereArray* newSphereArray(int size);
 
-
 #endif

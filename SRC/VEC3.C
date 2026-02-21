@@ -2,6 +2,16 @@
 #include "math.h"
 #include "bool.h"
 
+vec3 newVec3(double x, double y, double z) {
+    vec3 result;
+
+    result.x = x;
+    result.y = y;
+    result.z = z;
+
+    return result;
+}
+
 vec3 v3Negate(const vec3* v) {
     vec3 result;
     

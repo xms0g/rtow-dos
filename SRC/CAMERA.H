@@ -10,9 +10,9 @@ typedef struct Camera {
     vec3 pixel00Loc;       // Location of pixel 0, 0
     vec3 pixelDeltaU;      // Offset to pixel to the right
     vec3 pixelDeltaV;      // Offset to pixel below
-    double defocusAngle;   // Variation angle of rays through each pixel
     vec3 defocusDiskU;     // Defocus disk horizontal radius
     vec3 defocusDiskV;     // Defocus disk vertical radius
+    double defocusAngle;   // Variation angle of rays through each pixel
 
     Ray (*getRay)(int, int);
 } Camera;
