@@ -5,11 +5,11 @@
 #include "material.h"
 #include "ray.h"
 
+static Scene this;
+
 static void scAdd(const struct Sphere* object);
 static bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
 static void scClear(void);
-
-static Scene this;
 
 Scene* newScene(int size) {
     this.add = scAdd;

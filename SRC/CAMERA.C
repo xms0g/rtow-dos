@@ -2,11 +2,11 @@
 #include <stddef.h>
 #include "math.h"
 
+static Camera this;
+
 static vec3 sampleSquare();
 static vec3 defocusDiskSample(const Camera* cam);
 static Ray getRay(int x, int y);
-
-static Camera this;
 
 Camera* newCamera(double aspectRatio, double vfov, double defocusAngle, double focusDist, int imageWidth, const vec3* lookfrom, const vec3* lookat, const vec3* vup) {
     int imageHeight;
