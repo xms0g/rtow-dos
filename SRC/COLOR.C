@@ -373,8 +373,5 @@ unsigned char pixel2vga(const color* pixel) {
 }
 
 double linear2gamma(double linearComponent) {
-	if (linearComponent > 0)
-        return sqrt(linearComponent);
-
-    return 0;
+	return 1.0 /invSqrt(fmax(0.0, linearComponent));
 }
