@@ -342,14 +342,11 @@ unsigned char rgb2vga(int r, int g, int b) {
 		double rs = sample[0];
 		double gs = sample[1];
 		double bs = sample[2];
-		double dst = sqrt(pow(rs - rf, 2.0) + pow(gs - gf, 2.0) + pow(bs - bf, 2.0));
+		double dst = pow(rs - rf, 2.0) + pow(gs - gf, 2.0) + pow(bs - bf, 2.0);
     	
 		if (closest > dst) {
         	closest = dst;
         	index = i;
-      	} else if (dst < 0.05) {
-        	index = i;
-        	break;
       	}
   	}
 
