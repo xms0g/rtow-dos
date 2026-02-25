@@ -82,8 +82,8 @@ bool dielectricScatter(const Material* mat, const struct Ray* in, const struct H
     vec3 unitDir = v3Unit(&in->direction);
     vec3 negated = v3Negate(&unitDir);
     double cosTheta = fmin(v3Dot(&negated, &rec->normal), 1.0);
-    double invSinTheta = invSqrt(1.0 - cosTheta * cosTheta);
-    bool cannotRefract = (bool)(ri / invSinTheta > 1.0);
+    double sinTheta = 1.0 / fmax(invSqrt(1.0 - cosTheta * cosTheta), 0.00001);
+    bool cannotRefract = (bool)(ri * sinTheta > 1.0);
 
     if (cannotRefract || reflectance(cosTheta, ri) > randd()) {
         dir = v3Reflect(&unitDir, &rec->normal);

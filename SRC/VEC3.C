@@ -95,7 +95,7 @@ vec3 v3Normalize(vec3* v) {
 }
 
 double v3Len(const vec3* v) {
-    return 1.0 / invSqrt(v3LenSquared(v));
+    return 1.0 / fmax(invSqrt(v3LenSquared(v)), 0.00001);
 }
 
 double v3LenSquared(const vec3* v) {
@@ -185,13 +185,15 @@ vec3 v3Reflect(const vec3* v, const vec3* n) {
 
 vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat) {
     vec3 rayOutParallel;
+    double sqrted;
     vec3 negated = v3Negate(uv);
     double cos_theta = fmin(v3Dot(&negated, n), 1.0);
     vec3 nMultCosTheta = v3MultiplyN(n, cos_theta);
     vec3 rayOutPerp = v3Add(uv, &nMultCosTheta);
     rayOutPerp = v3MultiplyN(&rayOutPerp, etaiOverEtat);
-        
-    rayOutParallel = v3DivideN(n, -invSqrt(fabs(1.0 - v3LenSquared(&rayOutPerp))));
+
+    sqrted = 1.0 / fmax(invSqrt(fabs(1.0 - v3LenSquared(&rayOutPerp))), 0.00001);
+    rayOutParallel = v3MultiplyN(n, -sqrted);
     
     return v3Add(&rayOutPerp, &rayOutParallel);
 }
