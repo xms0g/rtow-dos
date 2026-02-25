@@ -71,13 +71,12 @@ void main(void) {
     const Sphere* metalSphere;
     const Sphere* glassSphere;
     const Sphere* lambertSphere;
-
-    const Lambertian* const groundMat = newLambertian(groundColor);
-    const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)groundMat);
     
     const Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
     const Scene* sc = newScene(100);
 
+    const Lambertian* const groundMat = newLambertian(groundColor);
+    const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)groundMat);
     sc->add(groundSphere);
     
     for (a = -10; a < 10; a++) {
@@ -120,15 +119,14 @@ void main(void) {
 
     metalMat = newMetal(metalColor, 0.0);
     metalSphere = newSphere(metalCenter, 1.0, (const Material*)metalMat);
+    sc->add(metalSphere);
 
     dielectricMat = newDielectric(1.5);
     glassSphere = newSphere(glassCenter, 1.0, (const Material*)dielectricMat);
+    sc->add(glassSphere);
 
     lambertMat = newLambertian(lambertColor);
     lambertSphere = newSphere(lambertCenter, 1.0, (const Material*)lambertMat);
-   
-    sc->add(metalSphere);
-    sc->add(glassSphere);
     sc->add(lambertSphere);
 
     _initMode(MODE_VGA_13H);
