@@ -39,7 +39,7 @@ bool spHit(const struct Sphere* sphere, const struct Ray* ray, double tmin, doub
     if (discriminant < 0)
         return false;
 
-    sqrtd = sqrt(discriminant);
+    sqrtd = 1.0 / invSqrt(discriminant);
 
     // Find the nearest root that lies in the acceptable range.
     root = (h - sqrtd) / a;
