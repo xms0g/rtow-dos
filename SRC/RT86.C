@@ -24,17 +24,17 @@
 static const vec3 VUP = {0, 1, 0};
 static const vec3 LOOKFROM = {13, 2, 3};
 static const vec3 LOOKAT = {0, 0, 0};
+static const color SKY_COLOR_BASE = {1.0, 1.0, 1.0};
+static const color SKY_COLOR_UP = {0.5, 0.7, 1.0};
+static const color ZERO_COLOR = {0, 0, 0};
 
 color rayColor(const Ray* ray, int depth, const Scene* sc) {
     double a;
     HitRecord rec;
-    vec3 unitDir, col1Scaled, col2Scaled;
-    const vec3 col1 = newVec3(1.0, 1.0, 1.0);
-    const vec3 col2 = newVec3(0.5, 0.7, 1.0);
-    const vec3 zeroColor = newVec3(0, 0, 0);
-
+    vec3 unitDir;
+    
     if (depth <= 0) {
-        return zeroColor;
+        return ZERO_COLOR;
     }
     
     if (sc->hit(ray, 0.001, DBL_MAX, &rec)) {
@@ -45,15 +45,13 @@ color rayColor(const Ray* ray, int depth, const Scene* sc) {
             return v3Multiply(&attenuation, &scatteredCol);
         }
        
-        return zeroColor;
+        return ZERO_COLOR;
     }
 
     unitDir = v3Unit(&ray->direction);
     a = 0.5 * (unitDir.y + 1.0);
-    col1Scaled = v3MultiplyN(&col1, 1.0 - a);
-    col2Scaled = v3MultiplyN(&col2, a);
 
-    return v3Add(&col1Scaled, &col2Scaled);
+    return v3Lerp(&SKY_COLOR_BASE, &SKY_COLOR_UP, a);
 }
 
 void main(void) {

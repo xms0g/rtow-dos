@@ -55,4 +55,6 @@ vec3 v3Reflect(const vec3* v, const vec3* n);
 
 vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat);
 
+vec3 v3Lerp(const vec3* v0, const vec3* v1, double t);
+
 #endif

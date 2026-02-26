@@ -197,3 +197,10 @@ vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat) {
     
     return v3Add(&rayOutPerp, &rayOutParallel);
 }
+
+vec3 v3Lerp(const vec3* v0, const vec3* v1, double t) {
+    vec3 v0Mult = v3MultiplyN(v0, 1 - t);
+    vec3 v1Mult = v3MultiplyN(v1, t);
+
+    return v3Add(&v0Mult, &v1Mult);
+}
