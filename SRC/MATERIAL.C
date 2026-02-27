@@ -84,6 +84,7 @@ bool dielectricScatter(const Material* mat, const struct Ray* in, const struct H
     double cosTheta = fmin(v3Dot(&negated, &rec->normal), 1.0);
     double sinTheta = 1.0 / invSqrt(1.0 - cosTheta * cosTheta);
     bool cannotRefract = (bool)(ri * sinTheta > 1.0);
+    static vec3 attenuationConst = {1.0, 1.0, 1.0};
 
     if (cannotRefract || reflectance(cosTheta, ri) > randd()) {
         dir = v3Reflect(&unitDir, &rec->normal);
@@ -93,10 +94,8 @@ bool dielectricScatter(const Material* mat, const struct Ray* in, const struct H
 
     scattered->origin = rec->p;
     scattered->direction = dir;
-     // the glass surface absorbs nothing.
-    attenuation->x = 1.0;
-    attenuation->y = 1.0;
-    attenuation->z = 1.0;
+    // the glass surface absorbs nothing.
+    *attenuation = attenuationConst;
 
     return true;
 }
