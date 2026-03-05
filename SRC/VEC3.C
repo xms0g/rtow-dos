@@ -147,7 +147,7 @@ vec3 v3RandomRange(double min, double max) {
 }
 
 vec3 v3RandomUnitVec() {
-    while (true) {
+    for (;;) {
         vec3 p = v3RandomRange(-1, 1);
         double lensq = v3LenSquared(&p);
         
@@ -158,7 +158,7 @@ vec3 v3RandomUnitVec() {
 }
 
 vec3 v3RandomInUnitDisk() {
-    while (true) {
+    for (;;) {
         vec3 p;
         p.x = randdRange(-1,1);
         p.y = randdRange(-1,1);
