@@ -63,19 +63,19 @@ void main(void) {
     const vec3 glassCenter = newVec3(0, 1, 0);
     const vec3 lambertCenter = newVec3(-4, 1, 0);
     const color lambertColor = newVec3(0.4, 0.2, 0.1);
-    const Metal* metalMat;
-    const Dielectric* dielectricMat;
-    const Lambertian* lambertMat;
-    const Sphere* metalSphere;
-    const Sphere* glassSphere;
-    const Sphere* lambertSphere;
     
     const Camera* cam = newCamera(ASPECT_RATIO, VFOV, DEFOCUS_ANGLE, FOCUS_DIST, WIDTH, &LOOKFROM, &LOOKAT, &VUP);
     const Scene* sc = newScene(100);
 
-    const Lambertian* const groundMat = newLambertian(groundColor);
-    const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)groundMat);
+    const Sphere* const groundSphere = newSphere(groundCenter, 1000.0, (const Material*)newLambertian(groundColor));
+    const Sphere* const metalSphere = newSphere(metalCenter, 1.0, (const Material*)newMetal(metalColor, 0.0));
+    const Sphere* const glassSphere = newSphere(glassCenter, 1.0, (const Material*)newDielectric(1.5));
+    const Sphere* const lambertSphere = newSphere(lambertCenter, 1.0, (const Material*)newLambertian(lambertColor));
+   
     sc->add(groundSphere);
+    sc->add(metalSphere);
+    sc->add(glassSphere);
+    sc->add(lambertSphere);
     
     for (a = -10; a < 10; a++) {
         for (b = -10; b < 10; b++) {
@@ -91,41 +91,23 @@ void main(void) {
                     vec3 albedoVec1 = v3Random();
                     vec3 albedo = v3Multiply(&albedoVec, &albedoVec1);
 
-                    const Lambertian* const lambertMat = newLambertian(albedo);
-                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)lambertMat);
-                  
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)newLambertian(albedo));
                     sc->add(sphere);
                 } else if (choose_mat < 0.95) {
                     // metal
                     vec3 albedo = v3RandomRange(0.5, 1);
                     double fuzz = randdRange(0, 0.5);
                     
-                    const Metal* const metalMat = newMetal(albedo, fuzz);
-                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)metalMat);
-                    
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)newMetal(albedo, fuzz));
                     sc->add(sphere);
                 } else {
                     // glass
-                    const Dielectric* const dielectricMat = newDielectric(1.5);
-                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)dielectricMat);
-                    
+                    const Sphere* const sphere = newSphere(center, 0.2, (const Material*)newDielectric(1.5));
                     sc->add(sphere);
                 }
             }
         }
     }
-
-    metalMat = newMetal(metalColor, 0.0);
-    metalSphere = newSphere(metalCenter, 1.0, (const Material*)metalMat);
-    sc->add(metalSphere);
-
-    dielectricMat = newDielectric(1.5);
-    glassSphere = newSphere(glassCenter, 1.0, (const Material*)dielectricMat);
-    sc->add(glassSphere);
-
-    lambertMat = newLambertian(lambertColor);
-    lambertSphere = newSphere(lambertCenter, 1.0, (const Material*)lambertMat);
-    sc->add(lambertSphere);
 
     _initMode(MODE_VGA_13H);
 
