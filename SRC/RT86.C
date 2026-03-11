@@ -40,7 +40,7 @@ color rayColor(const Ray* ray, int depth, const Scene* sc) {
     if (sc->hit(ray, 0.001, DBL_MAX, &rec)) {
         Ray scattered;
         color attenuation;
-        if (rec.mat->scatter(rec.mat, ray, &rec, &attenuation, &scattered)) {
+        if (rec.mat->vtable->scatter(rec.mat, ray, &rec, &attenuation, &scattered)) {
             vec3 scatteredCol = rayColor(&scattered, depth - 1, sc);
             return v3Multiply(&attenuation, &scatteredCol);
         }

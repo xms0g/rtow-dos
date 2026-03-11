@@ -9,13 +9,17 @@ static bool metalScatter(const Material* mat, const struct Ray* in, const struct
 static bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
 static double reflectance(double cosine, double refractionIndex);
 
+static const Vtable lambertianVtable = {lambertianScatter};
+static const Vtable metalVtable = {metalScatter};
+static const Vtable dielectricVtable = {dielectricScatter};
+
 const Lambertian* newLambertian(color albedo) {
     Lambertian* mat = (Lambertian*)malloc(sizeof(Lambertian));
 
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.scatter = lambertianScatter;
+    mat->base.vtable = &lambertianVtable;
     mat->albedo = albedo;
     
     return mat;
@@ -27,7 +31,7 @@ const Metal* newMetal(color albedo, double fuzz) {
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.scatter = metalScatter;
+    mat->base.vtable = &metalVtable;
     mat->albedo = albedo;
     mat->fuzz = fuzz;
     
@@ -40,7 +44,7 @@ const Dielectric* newDielectric(double refractionIndex) {
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.scatter = dielectricScatter;
+    mat->base.vtable = &dielectricVtable;
     mat->refractionIndex = refractionIndex;
     
     return mat;

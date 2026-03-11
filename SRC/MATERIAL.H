@@ -6,8 +6,12 @@
 struct Ray;
 struct HitRecord;
 
-typedef struct Material {
+typedef struct Vtable {
     bool (*scatter)(const struct Material*, const struct Ray*, const struct HitRecord*, color*, struct Ray*);
+} Vtable;
+
+typedef struct Material {
+    const Vtable* vtable;
 } Material;
 
 typedef struct Lambertian {
