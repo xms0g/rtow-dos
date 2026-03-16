@@ -126,7 +126,7 @@ vec3 v3Unit(const vec3* v) {
     return v3DivideN(v, v3Len(v));
 }
 
-vec3 v3Random() {
+vec3 v3Random(void) {
     vec3 result;
 
     result.x = randd();
@@ -146,7 +146,7 @@ vec3 v3RandomRange(double min, double max) {
     return result;
 }
 
-vec3 v3RandomUnitVec() {
+vec3 v3RandomUnitVec(void) {
     for (;;) {
         vec3 p = v3RandomRange(-1, 1);
         double lensq = v3LenSquared(&p);
@@ -157,7 +157,7 @@ vec3 v3RandomUnitVec() {
     }
 }
 
-vec3 v3RandomInUnitDisk() {
+vec3 v3RandomInUnitDisk(void) {
     for (;;) {
         vec3 p;
         p.x = randdRange(-1,1);

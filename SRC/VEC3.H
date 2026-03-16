@@ -41,13 +41,13 @@ vec3 v3Cross(const vec3* v0, const vec3* v1);
 
 vec3 v3Unit(const vec3* v);
 
-vec3 v3Random();
+vec3 v3Random(void);
 
 vec3 v3RandomRange(double min, double max);
 
-vec3 v3RandomUnitVec();
+vec3 v3RandomUnitVec(void);
 
-vec3 v3RandomInUnitDisk();
+vec3 v3RandomInUnitDisk(void);
 
 vec3 v3RandomOnHemisphere(const vec3* normal);
 
