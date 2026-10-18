@@ -1,13 +1,13 @@
 .model small
 .data
 .code
-public __waitvretrace
-public __initMode
-public __putpixel
+public __wait_vretrace
+public __init_mode
+public __put_pixel
 ; -------------------------------------------------------------
-; void _Cdecl _waitvretrace(void)                             ;
+; void _Cdecl _wait_vretrace(void)                             ;
 ; -------------------------------------------------------------
-__waitvretrace proc
+__wait_vretrace proc
     cli
     ;If vert. retrace bit is set, wait for it to clear
 v1: 
@@ -24,11 +24,11 @@ v2:
     jz v2           ;loop back till vert. retrace bit is newly set
     sti
     ret
-__waitvretrace endp
+__wait_vretrace endp
 ; -------------------------------------------------------------
-; void _Cdecl _initMode(int mode)                        ;
+; void _Cdecl _init_mode(int mode)                        ;
 ; -------------------------------------------------------------
-__initMode proc
+__init_mode proc
     push bp       
     mov bp, sp
     mov al, byte ptr [bp+4]
@@ -37,11 +37,11 @@ __initMode proc
     mov sp, bp
     pop bp
     ret      
-__initMode endp
+__init_mode endp
 ; -------------------------------------------------------------
-; void _Cdecl _putpixel(int x, int y, char color)             ;
+; void _Cdecl _put_pixel(int x, int y, char color)             ;
 ; -------------------------------------------------------------
-__putpixel proc
+__put_pixel proc
     push bp      
     mov bp, sp
     push 0A000h
@@ -63,5 +63,5 @@ __putpixel proc
     mov sp, bp
     pop bp
     ret     
-__putpixel endp
+__put_pixel endp
 end

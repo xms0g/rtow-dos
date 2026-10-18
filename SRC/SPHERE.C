@@ -5,15 +5,15 @@
 #include "hitrcd.h"
 #include "ray.h"
 
-static bool spHit(const struct Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
-static void saPushback(struct SphereArray* sa, const Sphere* sphere);
-static void saRemove(struct SphereArray* sa, int index);
-static Sphere* saAt(struct SphereArray* sa, int index);
-static void saClear(struct SphereArray* sa);
-static void saFree(struct SphereArray* sa);
+static bool sp_hit(const struct sphere* sphere, const struct ray* ray, double tmin, double tmax, struct hit_record* rec);
+static void sa_pushback(struct sphere_array* sa, const sphere* sphere);
+static void sa_remove(struct sphere_array* sa, int index);
+static sphere* sa_at(struct sphere_array* sa, int index);
+static void sa_clear(struct sphere_array* sa);
+static void sa_free(struct sphere_array* sa);
 
-Sphere* newSphere(vec3 center, double radius, const struct Material* mat) {
-    Sphere* sphere = (Sphere*)malloc(sizeof(Sphere));
+sphere* new_sphere(vec3 center, double radius, const struct material* mat) {
+    sphere* sphere = (sphere*)malloc(sizeof(sphere));
 
     if (sphere == NULL) {
         return NULL;
@@ -22,24 +22,24 @@ Sphere* newSphere(vec3 center, double radius, const struct Material* mat) {
     sphere->center = center;
     sphere->radius = radius;
     sphere->mat = mat;
-    sphere->hit = spHit;
+    sphere->hit = sp_hit;
     
     return sphere;
 }
 
-bool spHit(const struct Sphere* sphere, const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
+bool sp_hit(const struct sphere* sphere, const struct ray* ray, double tmin, double tmax, struct hit_record* rec) {
     double sqrtd, root;
-    vec3 outwardNormal;
-    vec3 oc = v3Subtract(&sphere->center, &ray->origin);
-    double a = v3Dot(&ray->direction, &ray->direction);
-    double h = v3Dot(&ray->direction, &oc);
-    double c = v3Dot(&oc, &oc) - sphere->radius * sphere->radius;
+    vec3 outward_normal;
+    vec3 oc = v3_sub(&sphere->center, &ray->origin);
+    double a = v3_dot(&ray->direction, &ray->direction);
+    double h = v3_dot(&ray->direction, &oc);
+    double c = v3_dot(&oc, &oc) - sphere->radius * sphere->radius;
     double discriminant = h * h - a * c;
     
     if (discriminant < 0)
         return false;
 
-    sqrtd = 1.0 / invSqrt(discriminant);
+    sqrtd = 1.0 / inv_sqrt(discriminant);
 
     // Find the nearest root that lies in the acceptable range.
     root = (h - sqrtd) / a;
@@ -50,18 +50,18 @@ bool spHit(const struct Sphere* sphere, const struct Ray* ray, double tmin, doub
     }
 
     rec->t = root;
-    rec->p = rayAt(ray, rec->t);
+    rec->p = ray_at(ray, rec->t);
     
-    outwardNormal = v3Subtract(&rec->p, &sphere->center);
-    outwardNormal = v3DivideN(&outwardNormal, sphere->radius);
-    setFaceNormal(rec, ray, &outwardNormal);
+    outward_normal = v3_sub(&rec->p, &sphere->center);
+    outward_normal = v3_divide_n(&outward_normal, sphere->radius);
+    set_face_normal(rec, ray, &outward_normal);
     rec->mat = sphere->mat;
 
     return true;
 }
 
-SphereArray* newSphereArray(int size) {
-    SphereArray* sa = (SphereArray*)malloc(sizeof(SphereArray));
+sphere_array* new_sphere_array(int size) {
+    sphere_array* sa = (sphere_array*)malloc(sizeof(sphere_array));
 
     if (sa == NULL) {
         return NULL;
@@ -69,32 +69,32 @@ SphereArray* newSphereArray(int size) {
 
     sa->count = 0;
     sa->capacity = size;
-    sa->data = (Sphere*)malloc(size * sizeof(Sphere));
+    sa->data = (sphere*)malloc(size * sizeof(sphere));
 
     if (sa->data == NULL) {
         free(sa);
         return NULL;
     }
     
-    sa->pushback = saPushback;
-    sa->remove = saRemove;
-    sa->at = saAt;
-    sa->clear = saClear;
-    sa->free = saFree;
+    sa->pushback = sa_pushback;
+    sa->remove = sa_remove;
+    sa->at = sa_at;
+    sa->clear = sa_clear;
+    sa->free = sa_free;
 
     return sa;
 }
 
-void saPushback(struct SphereArray* sa, const Sphere* sphere) {
+void sa_pushback(struct sphere_array* sa, const sphere* sphere) {
     if (sa->count == sa->capacity) {
         sa->capacity *= 2;
-        sa->data = (Sphere*)realloc(sa->data, sa->capacity * sizeof(Sphere));
+        sa->data = (sphere*)realloc(sa->data, sa->capacity * sizeof(sphere));
     }
 
     sa->data[sa->count++] = *sphere;
 }
 
-void saRemove(struct SphereArray* sa, int index) {
+void sa_remove(struct sphere_array* sa, int index) {
     int i;
 
     if (index < 0 || index >= sa->count) {
@@ -108,7 +108,7 @@ void saRemove(struct SphereArray* sa, int index) {
     sa->count--;
 }
 
-Sphere* saAt(struct SphereArray* sa, int index) {
+sphere* sa_at(struct sphere_array* sa, int index) {
     if (index < 0 || index >= sa->count) {
         return NULL;
     }
@@ -116,12 +116,12 @@ Sphere* saAt(struct SphereArray* sa, int index) {
     return &sa->data[index];
 }
 
-void saClear(struct SphereArray* sa) {
-    memset(sa->data, 0, sa->count * sizeof(Sphere));
+void sa_clear(struct sphere_array* sa) {
+    memset(sa->data, 0, sa->count * sizeof(sphere));
     sa->count = 0;
 }
 
-void saFree(struct SphereArray* sa) {
+void sa_free(struct sphere_array* sa) {
     int i;
     for (i = 0; i < sa->count; ++i) {
         free(sa->data[i].mat);

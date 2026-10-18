@@ -1,39 +1,39 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#ifndef material_H
+#define material_H
 
 #include "color.h"
 
-struct Ray;
-struct HitRecord;
+struct ray;
+struct hit_record;
 
-typedef struct Vtable {
-    bool (*scatter)(const struct Material*, const struct Ray*, const struct HitRecord*, color*, struct Ray*);
-} Vtable;
+typedef struct vtable {
+    bool (*scatter)(const struct material*, const struct ray*, const struct hit_record*, color*, struct ray*);
+} vtable;
 
-typedef struct Material {
-    const Vtable* vtable;
-} Material;
+typedef struct material {
+    const vtable* vtable;
+} material;
 
-typedef struct Lambertian {
-    Material base;
+typedef struct lambertian {
+    material base;
     color albedo;
-} Lambertian;
+} lambertian;
 
-typedef struct Metal {
-    Material base;
+typedef struct metal {
+    material base;
     color albedo;
     double fuzz;
-} Metal;
+} metal;
 
-typedef struct Dielectric {
-    Material base;
-    double refractionIndex;
-} Dielectric;
+typedef struct dielectric {
+    material base;
+    double refraction_index;
+} dielectric;
 
-const Lambertian* newLambertian(color albedo);
+const lambertian* new_lambertian(color albedo);
 
-const Metal* newMetal(color albedo, double fuzz);
+const metal* new_metal(color albedo, double fuzz);
 
-const Dielectric* newDielectric(double refractionIndex);
+const dielectric* new_dielectric(double refraction_index);
 
 #endif

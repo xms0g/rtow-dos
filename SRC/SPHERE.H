@@ -1,35 +1,35 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef sphere_H
+#define sphere_H
 
 #include "vec3.h"
 #include "bool.h"
 
-struct Material;
-struct HitRecord;
-struct Ray;
+struct material;
+struct hit_record;
+struct ray;
 
-typedef struct Sphere {
+typedef struct sphere {
     vec3 center;
     double radius;
-    const struct Material* mat;
+    const struct material* mat;
 
-    bool (*hit)(const struct Sphere*, const struct Ray*, double, double, struct HitRecord*);
-} Sphere;
+    bool (*hit)(const struct sphere*, const struct ray*, double, double, struct hit_record*);
+} sphere;
 
-typedef struct SphereArray {    
+typedef struct sphere_array {    
     int count;      
     int capacity;   
-    Sphere* const data;
+    sphere* const data;
     
-    void (*pushback)(struct SphereArray*, const struct Sphere*);
-    void (*remove)(struct SphereArray*, int);
-    struct Sphere* (*at)(struct SphereArray*, int);
-    void (*clear)(struct SphereArray*);
-    void (*free)(struct SphereArray*);
-} SphereArray;
+    void (*pushback)(struct sphere_array*, const struct sphere*);
+    void (*remove)(struct sphere_array*, int);
+    struct sphere* (*at)(struct sphere_array*, int);
+    void (*clear)(struct sphere_array*);
+    void (*free)(struct sphere_array*);
+} sphere_array;
 
-Sphere* newSphere(vec3 center, double radius, const struct Material* mat);
+sphere* new_sphere(vec3 center, double radius, const struct material* mat);
 
-SphereArray* newSphereArray(int size);
+sphere_array* new_sphere_array(int size);
 
 #endif

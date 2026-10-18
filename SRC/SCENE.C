@@ -5,18 +5,18 @@
 #include "material.h"
 #include "ray.h"
 
-static Scene this;
+static scene this;
 
-static void scAdd(const struct Sphere* object);
-static bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec);
-static void scClear(void);
+static void sc_add(const struct sphere* object);
+static bool sc_hit(const struct ray* ray, double tmin, double tmax, struct hit_record* rec);
+static void sc_clear(void);
 
-Scene* newScene(int size) {
-    this.add = scAdd;
-    this.clear = scClear;
-    this.hit = scHit;
+scene* new_scene(int size) {
+    this.add = sc_add;
+    this.clear = sc_clear;
+    this.hit = sc_hit;
     
-    this.objects = newSphereArray(size);
+    this.objects = new_sphere_array(size);
     
     if (this.objects == NULL) {
         return NULL;
@@ -25,29 +25,29 @@ Scene* newScene(int size) {
     return &this;
 }
 
-void scAdd(const struct Sphere* object) {
+void sc_add(const struct sphere* object) {
     this.objects->pushback(this.objects, object);
 }
 
-void scClear(void) {
+void sc_clear(void) {
     this.objects->free(this.objects);
     free(this.objects);
     this.objects = NULL;
 }
 
- bool scHit(const struct Ray* ray, double tmin, double tmax, struct HitRecord* rec) {
+ bool sc_hit(const struct ray* ray, double tmin, double tmax, struct hit_record* rec) {
     int i;
-    bool hitAnything = false;
-    double closestSoFar = tmax;
+    bool hit_anything = false;
+    double closest = tmax;
 
     for (i = 0; i < this.objects->count; ++i) {
-        const Sphere* sphere = this.objects->at(this.objects, i);
+        const sphere* sphere = this.objects->at(this.objects, i);
 
-        if (sphere->hit(sphere, ray, tmin, closestSoFar, rec)) {
-            hitAnything = true;
-            closestSoFar = rec->t;
+        if (sphere->hit(sphere, ray, tmin, closest, rec)) {
+            hit_anything = true;
+            closest = rec->t;
         }
     }
 
-    return hitAnything;
+    return hit_anything;
  }

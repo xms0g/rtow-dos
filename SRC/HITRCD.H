@@ -1,20 +1,20 @@
-#ifndef HITRECORD_H
-#define HITRECORD_H
+#ifndef hit_record_H
+#define hit_record_H
 
 #include "bool.h"
 #include "vec3.h"
 
-struct Material;
-struct Ray;
+struct material;
+struct ray;
 
-typedef struct HitRecord {
+typedef struct hit_record {
     vec3 p;
     vec3 normal;
     double t;
-    bool frontFace;
-    const struct Material* mat;
-} HitRecord;
+    bool front_face;
+    const struct material* mat;
+} hit_record;
 
-void setFaceNormal(HitRecord* rec, const struct Ray* ray, const vec3* outwardNormal);
+void set_face_normal(hit_record* rec, const struct ray* ray, const vec3* outward_normal);
 
 #endif

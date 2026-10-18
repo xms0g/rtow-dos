@@ -4,109 +4,109 @@
 #include "ray.h"
 #include "math.h"
 
-static bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
-static bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
-static bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered);
-static double reflectance(double cosine, double refractionIndex);
+static bool lambertian_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered);
+static bool metal_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered);
+static bool dielectric_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered);
+static double reflectance(double cosine, double refraction_index);
 
-static const Vtable lambertianVtable = {lambertianScatter};
-static const Vtable metalVtable = {metalScatter};
-static const Vtable dielectricVtable = {dielectricScatter};
+static const vtable lambertian_vtable = {lambertian_scatter};
+static const vtable metal_vtable = {metal_scatter};
+static const vtable dielectric_vtable = {dielectric_scatter};
 
-const Lambertian* newLambertian(color albedo) {
-    Lambertian* mat = (Lambertian*)malloc(sizeof(Lambertian));
+const lambertian* new_lambertian(color albedo) {
+    lambertian* mat = (lambertian*)malloc(sizeof(lambertian));
 
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.vtable = &lambertianVtable;
+    mat->base.vtable = &lambertian_vtable;
     mat->albedo = albedo;
     
     return mat;
 }
 
-const Metal* newMetal(color albedo, double fuzz) {
-    Metal* mat = (Metal*)malloc(sizeof(Metal));
+const metal* new_metal(color albedo, double fuzz) {
+    metal* mat = (metal*)malloc(sizeof(metal));
 
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.vtable = &metalVtable;
+    mat->base.vtable = &metal_vtable;
     mat->albedo = albedo;
     mat->fuzz = fuzz;
     
     return mat;
 }
 
-const Dielectric* newDielectric(double refractionIndex) {
-    Dielectric* mat = (Dielectric*)malloc(sizeof(Dielectric));
+const dielectric* new_dielectric(double refraction_index) {
+    dielectric* mat = (dielectric*)malloc(sizeof(dielectric));
     
     if (mat == NULL) {
         return NULL;
     }
-    mat->base.vtable = &dielectricVtable;
-    mat->refractionIndex = refractionIndex;
+    mat->base.vtable = &dielectric_vtable;
+    mat->refraction_index = refraction_index;
     
     return mat;
 }
 
-bool lambertianScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
-    vec3 randomUnitVec = v3RandomUnitVec();
-    vec3 scatterDir = v3Add(&rec->normal, &randomUnitVec);
+bool lambertian_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered) {
+    vec3 random_unit_vec = v3_random_unit_vec();
+    vec3 scatter_dir = v3_add(&rec->normal, &random_unit_vec);
     (void)in;
     // Catch degenerate scatter direction
-    if (v3NearZero(&scatterDir)) {
-        scatterDir = rec->normal;
+    if (v3_near_zero(&scatter_dir)) {
+        scatter_dir = rec->normal;
     }
         
     scattered->origin = rec->p;
-    scattered->direction = scatterDir;
-    *attenuation = ((Lambertian*)mat)->albedo;
+    scattered->direction = scatter_dir;
+    *attenuation = ((lambertian*)mat)->albedo;
     
     return true;
 }
 
-bool metalScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
-    vec3 reflected = v3Reflect(&in->direction, &rec->normal);
-    vec3 randomUnitVec = v3RandomUnitVec();
-    vec3 reflectedUnit = v3Unit(&reflected);
-    vec3 fuzzVec = v3MultiplyN(&randomUnitVec, ((Metal*)mat)->fuzz);
-    reflected = v3Add(&reflectedUnit, &fuzzVec);
+bool metal_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered) {
+    vec3 reflected = v3_reflect(&in->direction, &rec->normal);
+    vec3 random_unit_vec = v3_random_unit_vec();
+    vec3 reflected_unit = v3_unit(&reflected);
+    vec3 fuzz_vec = v3_mul_n(&random_unit_vec, ((metal*)mat)->fuzz);
+    reflected = v3_add(&reflected_unit, &fuzz_vec);
         
     scattered->origin = rec->p;
     scattered->direction = reflected;
         
-    *attenuation = ((Metal*)mat)->albedo;
-    return (bool)(v3Dot(&scattered->direction, &rec->normal) > 0);
+    *attenuation = ((metal*)mat)->albedo;
+    return (bool)(v3_dot(&scattered->direction, &rec->normal) > 0);
 }
 
-bool dielectricScatter(const Material* mat, const struct Ray* in, const struct HitRecord* rec, color* attenuation, struct Ray* scattered) {
+bool dielectric_scatter(const material* mat, const struct ray* in, const struct hit_record* rec, color* attenuation, struct ray* scattered) {
     vec3 dir;
-    double ri = rec->frontFace ? (1.0 / ((Dielectric*)mat)->refractionIndex) : ((Dielectric*)mat)->refractionIndex;
-    vec3 unitDir = v3Unit(&in->direction);
-    vec3 negated = v3Negate(&unitDir);
-    double cosTheta = fmin(v3Dot(&negated, &rec->normal), 1.0);
-    double sinTheta = 1.0 / invSqrt(1.0 - cosTheta * cosTheta);
-    bool cannotRefract = (bool)(ri * sinTheta > 1.0);
-    static vec3 dielectricAttenuation = {1.0, 1.0, 1.0};
+    double ri = rec->front_face ? (1.0 / ((dielectric*)mat)->refraction_index) : ((dielectric*)mat)->refraction_index;
+    vec3 unit_dir = v3_unit(&in->direction);
+    vec3 negated = v3_negate(&unit_dir);
+    double cos_theta = fmin(v3_dot(&negated, &rec->normal), 1.0);
+    double sin_theta = 1.0 / inv_sqrt(1.0 - cos_theta * cos_theta);
+    bool cannot_refract = (bool)(ri * sin_theta > 1.0);
+    static vec3 attenuation = {1.0, 1.0, 1.0};
 
-    if (cannotRefract || reflectance(cosTheta, ri) > randd()) {
-        dir = v3Reflect(&unitDir, &rec->normal);
+    if (cannot_refract || reflectance(cos_theta, ri) > randd()) {
+        dir = v3_reflect(&unit_dir, &rec->normal);
     } else {
-        dir = v3Refract(&unitDir, &rec->normal, ri);
+        dir = v3_refract(&unit_dir, &rec->normal, ri);
     }
 
     scattered->origin = rec->p;
     scattered->direction = dir;
     // the glass surface absorbs nothing.
-    *attenuation = dielectricAttenuation;
+    *attenuation = attenuation;
 
     return true;
 }
 
-double reflectance(double cosine, double refractionIndex) {
+double reflectance(double cosine, double refraction_index) {
     // Use Schlick's approximation for reflectance.
-    double r0 = (1 - refractionIndex) / (1 + refractionIndex);
+    double r0 = (1 - refraction_index) / (1 + refraction_index);
     r0 = r0 * r0;
     return r0 + (1 - r0) * pow((1 - cosine), 5);
 }

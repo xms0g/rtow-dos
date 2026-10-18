@@ -9,52 +9,52 @@ typedef struct vec3 {
     double z;
 } vec3;
 
-vec3 newVec3(double x, double y, double z);
+vec3 new_vec3(double x, double y, double z);
 
-vec3 v3Negate(const vec3* v);
+vec3 v3_negate(const vec3* v);
 
-vec3 v3Add(const vec3* v0, const vec3* v1);
+vec3 v3_add(const vec3* v0, const vec3* v1);
 
-vec3 v3AddN(vec3* v, double N);
+vec3 v3_add_n(vec3* v, double N);
 
-vec3 v3Subtract(const vec3* v0, const vec3* v1);
+vec3 v3_sub(const vec3* v0, const vec3* v1);
 
-vec3 v3Multiply(const vec3* v0, const vec3* v1);
+vec3 v3_mul(const vec3* v0, const vec3* v1);
 
-vec3 v3MultiplyN(const vec3* v, double n);
+vec3 v3_mul_n(const vec3* v, double n);
 
-vec3 v3Divide(const vec3* v0, const vec3* v1);
+vec3 v3_divide(const vec3* v0, const vec3* v1);
 
-vec3 v3DivideN(const vec3* v, double n);
+vec3 v3_divide_n(const vec3* v, double n);
 
-vec3 v3Normalize(vec3* v);
+vec3 v3_normalize(vec3* v);
 
-double v3Len(const vec3* v);
+double v3_len(const vec3* v);
 
-double v3LenSquared(const vec3* v);
+double v3_len_squared(const vec3* v);
 
-double v3Dot(const vec3* v0, const vec3* v1);
+double v3_dot(const vec3* v0, const vec3* v1);
 
-bool v3NearZero(const vec3* v);
+bool v3_near_zero(const vec3* v);
 
-vec3 v3Cross(const vec3* v0, const vec3* v1);
+vec3 v3_cross(const vec3* v0, const vec3* v1);
 
-vec3 v3Unit(const vec3* v);
+vec3 v3_unit(const vec3* v);
 
-vec3 v3Random(void);
+vec3 v3_random(void);
 
-vec3 v3RandomRange(double min, double max);
+vec3 v3_random_range(double min, double max);
 
-vec3 v3RandomUnitVec(void);
+vec3 v3_random_unit_vec(void);
 
-vec3 v3RandomInUnitDisk(void);
+vec3 v3_random_in_unit_disk(void);
 
-vec3 v3RandomOnHemisphere(const vec3* normal);
+vec3 v3_random_on_hemisphere(const vec3* normal);
 
-vec3 v3Reflect(const vec3* v, const vec3* n);
+vec3 v3_reflect(const vec3* v, const vec3* n);
 
-vec3 v3Refract(vec3* uv, const vec3* n, double etaiOverEtat);
+vec3 v3_refract(vec3* uv, const vec3* n, double etaiOverEtat);
 
-vec3 v3Lerp(const vec3* v0, const vec3* v1, double t);
+vec3 v3_lerp(const vec3* v0, const vec3* v1, double t);
 
 #endif

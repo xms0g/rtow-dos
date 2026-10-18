@@ -1,21 +1,21 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef scene_H
+#define scene_H
 
 #include "bool.h"
 #include "sphere.h"
 
-struct Ray;
-struct HitRecord;
+struct ray;
+struct hit_record;
 
-typedef struct Scene {
+typedef struct scene {
     int objectCount;
-    SphereArray* const objects;
+    sphere_array* const objects;
 
-    void (*add)(const struct Sphere*);
+    void (*add)(const struct sphere*);
     void (*clear)(void);
-    bool (*hit)(const struct Ray*, double, double, struct HitRecord*);
-} Scene;
+    bool (*hit)(const struct ray*, double, double, struct hit_record*);
+} scene;
 
-Scene* newScene(int size);
+scene* new_scene(int size);
 
 #endif

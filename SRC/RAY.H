@@ -1,13 +1,13 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef ray_H
+#define ray_H
 
 #include "vec3.h"
 
-typedef struct Ray {
+typedef struct ray {
     vec3 origin;
     vec3 direction;
-} Ray;
+} ray;
 
-vec3 rayAt(const Ray* ray, double t);
+vec3 ray_at(const ray* ray, double t);
 
 #endif

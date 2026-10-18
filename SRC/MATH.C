@@ -1,6 +1,6 @@
 #include "math.h"
 
-double invSqrt(double n) {
+double inv_sqrt(double n) {
     long i;
     float x2, y;
 

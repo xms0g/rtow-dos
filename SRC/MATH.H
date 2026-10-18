@@ -18,8 +18,8 @@
 
 #define randd() (rand() / (RAND_MAX + 1.0))
 
-#define randdRange(min, max) (min + (max - min) * randd())
+#define randd_range(min, max) (min + (max - min) * randd())
 
-double invSqrt(double n);
+double inv_sqrt(double n);
 
 #endif

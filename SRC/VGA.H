@@ -7,8 +7,8 @@
 // VGA Text Mode
 #define MODE_VGA_3H  0x3
 
-void _Cdecl _waitvretrace(void);
-void _Cdecl _putpixel(int x, int y, char color);
-void _Cdecl _initMode(int mode);
+void _Cdecl _wait_vretrace(void);
+void _Cdecl _put_pixel(int x, int y, char color);
+void _Cdecl _init_mode(int mode);
 
 #endif
